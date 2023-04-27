@@ -212,16 +212,21 @@ void Table::_index()
 
 Table Table::select_all(const vector<string>& selected_fields)
 {
+    const bool debug = false;
+
     Table temp;
     // the do nothing case
-    if (selected_fields.empty())
+    if (selected_fields.empty() || selected_fields[0] == "*")
     {
         temp = *this;
         return temp;
     }
     // if there's an error
-    if (!this->_check_error_fields(selected_fields)) return temp;
-
+    if (!this->_check_error_fields(selected_fields))
+    {
+        if (debug) cout << "error fields" << endl;
+        return temp;
+    }
     // reorder the selected fields
     vector<string> reordered;
     this->_reorder_fields(selected_fields, reordered);
@@ -233,6 +238,7 @@ Table Table::select_all(const vector<string>& selected_fields)
 
     // get the indices that need to read, no need to copy cache since all the indices are already stored
     this->_read_helper(temp);
+    if (debug) cout << temp << endl;
     return temp;
 }
 
@@ -256,6 +262,8 @@ void Table::_read_helper(Table& temp)
 }
 vector<long> Table::_select_helper(const string& field_name, const string& op, const string& field_value)
 {
+    if (!this->_cache.contains(field_name)) return vector<long>();
+
     // this->_cache[field_name] gives you MMap, use that MMap[field_value] to get the indices
     if (op == "=" && this->_cache[field_name].contains(field_value)) return this->_cache[field_name][field_value];
     if (op == "<=") return this->_bound_helper(this->_cache[field_name].begin(), this->_cache[field_name].upper_bound(field_value));
@@ -272,8 +280,13 @@ Table Table::select(const vector<string>& selected_fields, const string& field_n
     Table temp;
 
     // select all fields
-    if (selected_fields.empty() || selected_fields[0] == "*") temp._field_names = this->_field_names;
-    if (!this->_check_error_fields(selected_fields)) return temp;
+    bool changed_fields = false;
+    if (selected_fields.empty() || selected_fields[0] == "*")
+    {
+        temp._field_names = this->_field_names;
+        changed_fields = true;
+    }
+    if (!changed_fields && !this->_check_error_fields(selected_fields)) return temp;
 
     // check if field name exists
     if (!Helper::is_in(this->_field_names, field_name)) return temp;
@@ -300,11 +313,14 @@ Table Table::select(const vector<string>& selected_fields, const string& field_n
 // accumulate version of select
 Table Table::select(const vector<string>& selected_fields, const vector<string>& expression)
 {
+    const bool debug = false;
     Queue<Token*> infix;
     Helper::generate_tokens(expression, infix);
+
     ShuntingYard sy(infix);
     Queue<Token*> postfix = sy.postfix();
     Table temp = this->select(selected_fields, postfix);
+
     if (!infix.empty())
     {
         typename Queue<Token*>::Iterator it;
@@ -316,11 +332,18 @@ Table Table::select(const vector<string>& selected_fields, const vector<string>&
 
 Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& expression)
 {
+    const bool debug = false;
     Table temp;
 
+    bool changed_fields = false;
     // select all fields
-    if (selected_fields.empty() || selected_fields[0] == "*") temp._field_names = this->_field_names;
-    if (!this->_check_error_fields(selected_fields)) return temp;
+    if (selected_fields.empty() || selected_fields[0] == "*")
+    {
+        temp._field_names = this->_field_names;
+        changed_fields = true;
+    }
+    // if (!changed_fields && !this->_check_error_fields(selected_fields)) return temp;
+
     // reorder the selected fields
     vector<string> reordered;
     this->_reorder_fields(selected_fields, reordered);
@@ -328,6 +351,7 @@ Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& 
     temp._table_name = this->_table_name;
     temp._field_names = reordered;
     // assign the indices
+    if (debug) cout << "indices:" << this->_rpn(expression) << endl;
     temp._record_indices = this->_rpn(expression);
 
     // read the entries

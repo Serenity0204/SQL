@@ -70,7 +70,22 @@ private:
     inline void _reorder_fields(const vector<string>& selected_fields, vector<string>& reordered_vec)
     {
         vector<string> reordered = selected_fields;
+        // search for invalids
+        vector<int> invalid_indices;
+        for (int i = 0; i < reordered.size(); ++i)
+        {
+            string field_name = reordered[i];
+            if (!this->_field_name_indices.contains(field_name)) invalid_indices.push_back(i);
+        }
+        // erase the invalid indices
+        for (auto invalid_i : invalid_indices)
+        {
+            vector<string>::iterator it = reordered.begin();
+            reordered.erase(it + invalid_i);
+        }
+
         vector<long> sort_indices;
+        // sort
         for (auto field_name : reordered)
         {
             long idx = this->_field_name_indices[field_name];
@@ -89,9 +104,9 @@ private:
 
             s.insert(field);
         }
-        // check non existing
-        for (auto field : selected_fields)
-            if (!this->_field_name_indices.contains_key(field)) return false;
+        // // check non existing, don't have to?
+        // for (auto field : selected_fields)
+        //     if (!this->_field_name_indices.contains_key(field)) return false;
 
         return true;
     }

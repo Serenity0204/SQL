@@ -223,35 +223,4 @@ void Parser::_tokenize()
         if (token.type() == TOKEN_UNKNOWN && token.token_str() == "\"") this->_types.push_back(QUOTE);
         this->_input.push_back(token);
     }
-
-    // process "" here, basically concat
-    vector<SToken> clean_input;
-    vector<PARSER_CONST> clean_type;
-    for (int i = 0; i < this->_input.size(); ++i)
-    {
-        if (this->_input[i].token_str() == "\"")
-        {
-            int j = i + 1;
-            string s = "";
-            while (this->_input[j].type() == TOKEN_ALPHA)
-            {
-                if (j != i + 1) s += " ";
-                s += this->_input[j].token_str();
-                ++j;
-            }
-            i = j;
-            clean_input.push_back(SToken(s, TOKEN_ALPHA));
-            clean_type.push_back(LITERAL);
-            continue;
-        }
-        clean_input.push_back(this->_input[i]);
-        clean_type.push_back(this->_types[i]);
-    }
-    this->_types = clean_type;
-    this->_input = clean_input;
-
-    // cout << "input size:" << this->_input.size() << endl;
-    // cout << "types size:" << this->_types.size() << endl;
-    // cout << "input:" << this->_input << endl;
-    // cout << "types:" << this->_types << endl;
 }

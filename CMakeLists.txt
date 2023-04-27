@@ -62,7 +62,11 @@ ADD_EXECUTABLE(test_stub
     _tests/_test_files/test_stub.cpp
     ${SOURCE_FILES}
 )
-
+ADD_EXECUTABLE(test_sql
+    _tests/_test_files/test_sql.cpp
+    ${SOURCE_FILES}
+)
 
 TARGET_LINK_LIBRARIES(main gtest)
 TARGET_LINK_LIBRARIES(test_stub gtest)
+TARGET_LINK_LIBRARIES(test_sql gtest)

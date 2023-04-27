@@ -36,7 +36,7 @@ void STokenizer::make_table(int table[][MAX_COLUMNS])
     init_table(this->_table);
     // decide success and fail state
     mark_fail(this->_table, 0);
-    for (int i = 1; i <= 7; ++i) mark_success(_table, i);
+    for (int i = 1; i <= 8; ++i) mark_success(_table, i);
 
     // hard coded state machine
     // init different input for state 0
@@ -47,11 +47,14 @@ void STokenizer::make_table(int table[][MAX_COLUMNS])
     mark_cells(0, _table, SPACES, 5);
     mark_cells(0, _table, PAREN, 6);
     mark_cells(0, _table, STAR, 7);
+    mark_cell(0, _table, '\"', 8);
 
     // remains the same state
     mark_cells(1, _table, ALPHAS, 1);    // state 1 alpha encounters alpha-> remains in state 1
     mark_cells(2, _table, DIGITS, 2);    // state 2 digit encounters digit-> remains in state 2
     mark_cells(3, _table, OPERATORS, 3); // state 3 operator encounters operator-> remains in state 3
+    for (int i = 0; i <= 255; ++i)       // for "
+        if (i != '\"') mark_cell(8, _table, i, 8);
 }
 // return the type of the token
 STRING_TOKEN_TYPES STokenizer::token_type(int state) const
@@ -63,6 +66,7 @@ STRING_TOKEN_TYPES STokenizer::token_type(int state) const
     if (state == 5) return TOKEN_SPACE;
     if (state == 6) return TOKEN_PAREN;
     if (state == 7) return TOKEN_STAR;
+    if (state == 8) return TOKEN_QUOTE;
     return TOKEN_UNKNOWN;
 }
 // extract the longest string that match one of the acceptable token types
@@ -188,11 +192,29 @@ bool STokenizer::get_token(int start_state, SToken& token)
             }
             break;
         }
+        if (state == 8)
+        {
+            if (next_state == 8)
+            {
+                start++;
+                continue;
+            }
+            break;
+        }
         break;
     }
+
+    this->_pos = start;
+    STRING_TOKEN_TYPES type = token_type(state);
     string s = "";
     for (int i = hold; i < start; ++i) s += this->_buffer[i];
-    this->_pos = start;
-    token = SToken(s, token_type(state));
+    if (type == TOKEN_QUOTE)
+    {
+        string::iterator it = s.begin();
+        s.erase(it);
+        type = TOKEN_ALPHA;
+        this->_pos++;
+    }
+    token = SToken(s, type);
     return true;
 }
