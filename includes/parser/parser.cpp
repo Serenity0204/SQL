@@ -211,9 +211,12 @@ void Parser::_tokenize()
             this->_types.push_back(LOGICAL);
         }
         // =, !=, <, >, <= and >=
-        bool is_relational = (token.token_str() == "<=" || token.token_str() == ">=" || token.token_str() == "=" || token.token_str() == ">" || token.token_str() == "<" || token.token_str() == "!=");
-        if (token.type() == TOKEN_OPERATOR && is_relational) this->_types.push_back(RELATIONAL);
-
+        bool is_relational = (token.token_str() == "!=" || token.token_str() == "<=" || token.token_str() == ">=" || token.token_str() == "=" || token.token_str() == ">" || token.token_str() == "<");
+        if (token.type() == TOKEN_OPERATOR && is_relational)
+        {
+            // cout << "op:" << token.token_str() << endl;
+            this->_types.push_back(RELATIONAL);
+        }
         if (token.type() == TOKEN_PAREN) this->_types.push_back(PARENS);
         if (token.type() == TOKEN_STAR && token.token_str() == "*") this->_types.push_back(ASTERISK);
         if (token.type() == TOKEN_COMMA && token.token_str() == ",") this->_types.push_back(COMMAS);
@@ -221,4 +224,6 @@ void Parser::_tokenize()
         if (token.type() == TOKEN_UNKNOWN && token.token_str() == "\"") this->_types.push_back(QUOTE);
         this->_input.push_back(token);
     }
+    // cout << _types << endl;
+    // cout << _input << endl;
 }

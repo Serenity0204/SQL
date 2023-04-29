@@ -40,6 +40,7 @@ Queue<Token*> ShuntingYard::shunting_yard()
     while (!this->_queue.empty())
     {
         Token* token = this->_queue.pop();
+        // cout << token->token_string() << "," << token->token_type() << endl;
         if (token->token_type() == TOKEN_TOKENSTR)
         {
             output_queue.push(token);
@@ -94,5 +95,6 @@ Queue<Token*> ShuntingYard::shunting_yard()
         }
         output_queue.push(operator_stack.pop());
     }
+    // cout << output_queue << endl;
     return output_queue;
 }

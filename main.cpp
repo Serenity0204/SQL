@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
         getline(std::cin, input);
         if (input.empty()) continue;
         if (input == "end") break;
-        std::cout << input << std::endl;
+        std::cout << "input:" << input << std::endl;
         Table tb = sql.command(input);
         if (sql.is_error())
         {
@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
             continue;
         }
         std::cout << tb << std::endl;
-        std::cout << sql.select_recnos() << std::endl;
+        std::cout << "record number:" << sql.select_recnos() << std::endl;
         std::cout << "-------------------------------------------------------------------------------------------------------------------------" << std::endl;
         std::cout << std::endl;
     } while (true);

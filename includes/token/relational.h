@@ -27,6 +27,7 @@ public:
         if (this->_str == ">=") return 4;
         if (this->_str == "=") return 4;
         if (this->_str == "!=") return 4;
+        if (this->_str == "LIKE") return 4;
         return -1;
     }
     virtual void print(ostream& outs) const override { outs << this->_str; }

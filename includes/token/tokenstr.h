@@ -20,7 +20,7 @@ public:
     TOKEN_TYPE_PTR token_type() const override { return TOKEN_TOKENSTR; }
     virtual string token_string() const override { return this->_str; }
     virtual void print(ostream& outs) const override { outs << this->_str; }
-    virtual int precedence() const { return -1; }
+    virtual int precedence() const override { return -1; }
     friend ostream& operator<<(ostream& outs, const TokenStr& token)
     {
         token.print(outs);

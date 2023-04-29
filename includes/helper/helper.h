@@ -86,8 +86,8 @@ namespace Helper
     {
         for (const auto& tk : input)
         {
-            if (tk == ">=" || tk == "<=" || tk == ">" || tk == "<" || tk == "=")
-            {
+            if (tk == ">=" || tk == "<=" || tk == ">" || tk == "<" || tk == "=" || tk == "!=" || tk == "LIKE")
+            { 
                 infix.push(new Relational(tk));
                 continue;
             }

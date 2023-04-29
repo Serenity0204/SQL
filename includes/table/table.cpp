@@ -29,7 +29,6 @@ Table::Table(const string& table_name, const vector<string>& field_names)
     string field_file = table_name + "_fields.bin";
     this->_table_name = table_name;
     this->_field_names = field_names;
-    
 
     if (file_exists(table_file.c_str()) || file_exists(field_file.c_str()))
     {
@@ -273,7 +272,7 @@ void Table::_read_helper(Table& temp)
 vector<long> Table::_select_helper(const string& field_name, const string& op, const string& field_value)
 {
     if (!this->_cache.contains(field_name)) return vector<long>();
-
+    // cout << "op:" << op << endl;
     // this->_cache[field_name] gives you MMap, use that MMap[field_value] to get the indices
     if (op == "=" && this->_cache[field_name].contains(field_value)) return this->_cache[field_name][field_value];
     if (op == "<=") return this->_bound_helper(this->_cache[field_name].begin(), this->_cache[field_name].upper_bound(field_value));
@@ -281,6 +280,19 @@ vector<long> Table::_select_helper(const string& field_name, const string& op, c
     if (op == ">=") return this->_bound_helper(this->_cache[field_name].lower_bound(field_value), this->_cache[field_name].end());
     if (op == ">") return this->_bound_helper(this->_cache[field_name].upper_bound(field_value), this->_cache[field_name].end());
     // !=, LIKE for todo
+    if (op == "!=")
+    {
+        vector<long> res;
+        typename MMap<string, long>::Iterator it;
+        for (it = this->_cache[field_name].begin(); it != this->_cache[field_name].end(); ++it)
+        {
+            // cout << (*it).key << "?" << field_name << endl;
+            if ((*it).key == field_value) continue;
+            res += (*it).value_list;
+        }
+        return res;
+    }
+
     // invalid
     return vector<long>();
 }
@@ -336,6 +348,7 @@ Table Table::select(const vector<string>& selected_fields, const vector<string>&
 
     ShuntingYard sy(infix);
     Queue<Token*> postfix = sy.postfix();
+    if (debug) cout << "postfix:" << postfix << endl;
     Table temp = this->select(selected_fields, postfix);
 
     if (!infix.empty())
@@ -393,6 +406,7 @@ vector<long> Table::_rpn(const Queue<Token*>& postfix)
     Stack<Token*> s;
     Queue<Token*> q = postfix;
     Stack<vector<long>> indices;
+    if (debug) cout << q << endl;
 
     while (!q.empty())
     {
@@ -409,6 +423,7 @@ vector<long> Table::_rpn(const Queue<Token*>& postfix)
             string field_value = s.pop()->token_string(); // field_value first
             string field_name = s.pop()->token_string();  // field_name second
             vector<long> selected_indices = this->_select_helper(field_name, relational_op, field_value);
+            // cout << "indices:" << selected_indices << endl;
             if (debug) cout << field_name << relational_op << field_value << " brings:" << selected_indices << endl;
             indices.push(selected_indices);
             // age, 20, <=
@@ -444,6 +459,7 @@ vector<long> Table::_rpn(const Queue<Token*>& postfix)
     if (indices.size() != 1)
     {
         if (debug) cout << "rpn error" << endl;
+        if (debug) cout << indices << endl;
         return vector<long>();
     }
     if (debug)
