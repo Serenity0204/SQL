@@ -86,25 +86,36 @@ bool sql_basic(bool debug = false)
 
 bool sql_batch(bool debug = false)
 {
+    remove("employeeSample01.bin");
+    remove("employeeSample01_fields.bin");
+    remove("studentSample01.bin");
+    remove("studentSample01_fields.bin");
+
     SQL sql;
-    // sql.batch((string("_!sample01.txt").c_str()));
+    string s = "../../_!sample01.txt";
+    sql.batch(s.c_str());
+
+    remove("employeeSample01.bin");
+    remove("employeeSample01_fields.bin");
+    remove("studentSample01.bin");
+    remove("studentSample01_fields.bin");
     return true;
 }
 
 // Lord help me!
 const bool debug = true;
 
-TEST(SQL_BASIC, SQLBasic)
-{
-    bool success = sql_basic(debug);
-    EXPECT_EQ(success, true);
-}
-
-// TEST(SQL_BASIC, SQLBatch)
+// TEST(SQL_BASIC, SQLBasic)
 // {
-//     bool success = sql_batch(debug);
+//     bool success = sql_basic(debug);
 //     EXPECT_EQ(success, true);
 // }
+
+TEST(SQL_BASIC, SQLBatch)
+{
+    bool success = sql_batch(debug);
+    EXPECT_EQ(success, true);
+}
 
 int main(int argc, char** argv)
 {

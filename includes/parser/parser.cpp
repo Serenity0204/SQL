@@ -88,7 +88,6 @@ bool Parser::_parse()
         type = this->_types[i];
         int prev_state = state;
         state = this->_table[prev_state][type];
-        // cout << "table(" << state << "," << type << ")" << endl;
         if (state == -1) return false;
 
         // dump keywords and add in literals
@@ -105,7 +104,6 @@ bool Parser::_parse()
     // // return true;
     if (this->_parse_tree["condition"].empty()) this->_parse_tree.erase("condition");
     if (this->_parse_tree["where"].empty()) this->_parse_tree.erase("where");
-    // cout << "last state:" << state << endl;
     return is_success(this->_table, state);
 }
 

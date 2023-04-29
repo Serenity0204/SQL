@@ -17,14 +17,14 @@ public:
     // Constructor
     SQL();
     // Process commands from a file
-    SQL(const char*& file);
+    SQL(const char* file);
     // Process a command and return the result table
     Table command(const string& cmd);
     // Get all selected record numbers
     vector<long> select_recnos() { return _table.select_recnos(); }
     // // Print command
     // void print_lookup() { _command.print_lookup(); }
-    void batch(const char*& file);
+    void batch(const char* file);
     //======================================
     // TODO: add more methods here as needed
     //======================================

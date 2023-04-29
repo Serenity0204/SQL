@@ -6,8 +6,10 @@ SQL::SQL()
 {
 }
 // Process commands from a file
-SQL::SQL(const char*& file)
+SQL::SQL(const char* file)
+    : SQL()
 {
+    this->batch(file);
 }
 // Process a command and return the result table
 Table SQL::command(const string& cmd)
@@ -133,6 +135,37 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
     }
 }
 
-// void SQL::batch(const char*& file)
-// {
-// }
+void SQL::batch(const char* file)
+{
+    ifstream f;
+    f.open(file);
+
+    if (f.fail())
+    {
+        cout << "No file named " << file << " exists." << endl;
+        return;
+    }
+    cout << "------------------------------Batch Begins------------------------------" << endl;
+    while (!f.eof())
+    {
+        string str;
+        getline(f, str);
+
+        if (str[0] == '/')
+        {
+            cout << str << endl;
+            continue;
+        }
+        if (!str.empty())
+        {
+            cout << "command:" << str << endl;
+            Table tb = this->command(str);
+            cout << tb << endl;
+            cout << "records selected: " << this->select_recnos() << endl;
+            cout << endl;
+            cout << endl;
+        }
+    }
+    f.close();
+    cout << "------------------------------DONE------------------------------" << endl;
+}
