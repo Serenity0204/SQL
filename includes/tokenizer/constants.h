@@ -5,7 +5,7 @@ const int MAX_COLUMNS = 256;
 const int MAX_ROWS = 100;
 const int MAX_BUFFER = 200;
 
-const char ALPHAS[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+const char ALPHAS[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
 const char DIGITS[] = "0123456789";
 const char OPERATORS[] = "><=!";
 const char SPACES[] = {' ', '\t', '\n', '\0'};
