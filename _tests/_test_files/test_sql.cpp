@@ -92,7 +92,7 @@ bool sql_batch(bool debug = false)
     remove("studentSample01_fields.bin");
 
     SQL sql;
-    string s = "../../_!sample01.txt";
+    string s = "../../batch/input/_!sample01.txt";
     sql.batch(s.c_str());
 
     remove("employeeSample01.bin");
