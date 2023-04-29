@@ -28,6 +28,7 @@ private:
     string _table_name;
     // fields of the table
     vector<string> _field_names;
+    vector<string> _selected_field_names;
     // number of records in the table
     long _n_records;
     // selected records' numbers
@@ -104,10 +105,6 @@ private:
 
             s.insert(field);
         }
-        // // check non existing, don't have to?
-        // for (auto field : selected_fields)
-        //     if (!this->_field_name_indices.contains_key(field)) return false;
-
         return true;
     }
 
@@ -146,7 +143,7 @@ public:
     // Get the title of the table
     inline string title() const { return _table_name; }
     // Get the fields of the table
-    inline vector<string> get_fields() { return this->_field_names; }
+    inline vector<string> get_fields() { return this->_selected_field_names; }
     // Get the number of records in the table
     inline long record_count() const { return this->_n_records; }
 };

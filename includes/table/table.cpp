@@ -6,6 +6,7 @@ Table::Table()
     this->_cache = Map<string, MMap<string, long>>();
     this->_field_name_indices = Map<string, long>();
     this->_field_names = vector<string>();
+    this->_selected_field_names = vector<string>();
     this->_record_indices = vector<long>();
     this->_to_print = vector<string>();
     this->_n_records = 0;
@@ -28,12 +29,15 @@ Table::Table(const string& table_name, const vector<string>& field_names)
     string field_file = table_name + "_fields.bin";
     this->_table_name = table_name;
     this->_field_names = field_names;
+    
+
     if (file_exists(table_file.c_str()) || file_exists(field_file.c_str()))
     {
         remove(table_file.c_str());
         remove(field_file.c_str());
     }
     this->_init(true);
+    this->_selected_field_names = field_names;
 }
 
 // for existing table
@@ -56,6 +60,9 @@ Table& Table::operator=(const Table& RHS)
     this->_record_indices = RHS._record_indices;
     this->_to_print = RHS._to_print;
     this->_field_names = RHS._field_names;
+    this->_selected_field_names = RHS._selected_field_names;
+    this->_n_records = RHS._n_records;
+    return *this;
 }
 
 // insert
@@ -87,7 +94,7 @@ string Table::insert_into(const vector<string>& field_values)
     // for print
     this->_to_print += field_values;
     // for number of record
-    ++this->_n_records;
+    this->_n_records = this->_record_indices.size();
     return "insert success";
 }
 
@@ -161,6 +168,7 @@ void Table::_init(bool is_new)
         field_names.erase(it);
 
         this->_field_names = field_names;
+        this->_selected_field_names = field_names;
         f.close();
     }
     this->_record_indices.clear();
@@ -236,6 +244,8 @@ Table Table::select_all(const vector<string>& selected_fields)
     temp._record_indices = this->_record_indices;
     temp._n_records = this->_n_records;
 
+    this->_selected_field_names = selected_fields;
+    temp._selected_field_names = selected_fields;
     // get the indices that need to read, no need to copy cache since all the indices are already stored
     this->_read_helper(temp);
     if (debug) cout << temp << endl;
@@ -277,6 +287,7 @@ vector<long> Table::_select_helper(const string& field_name, const string& op, c
 
 Table Table::select(const vector<string>& selected_fields, const string& field_name, const string& op, const string& field_value)
 {
+    const bool debug = false;
     Table temp;
 
     // select all fields
@@ -299,14 +310,20 @@ Table Table::select(const vector<string>& selected_fields, const string& field_n
     temp._field_names = reordered;
     // assign the indices
     temp._record_indices = this->_select_helper(field_name, op, field_value);
+    temp._n_records = temp._record_indices.size();
 
     // read the entries
     this->_read_helper(temp);
     this->_record_indices.clear();
     // assign new record indices
     this->_record_indices = temp._record_indices;
-    this->_n_records = this->_record_indices.size();
+    this->_n_records = temp._n_records;
 
+    this->_selected_field_names = selected_fields;
+    temp._selected_field_names = selected_fields;
+
+    if (debug) cout << "n records self:" << this->_n_records << endl;
+    if (debug) cout << "n records temp:" << temp._n_records << endl;
     return temp;
 }
 
@@ -353,13 +370,19 @@ Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& 
     // assign the indices
     if (debug) cout << "indices:" << this->_rpn(expression) << endl;
     temp._record_indices = this->_rpn(expression);
+    temp._n_records = temp._record_indices.size();
+    if (debug) cout << "n records temp:" << temp._n_records << endl;
 
     // read the entries
     this->_read_helper(temp);
     this->_record_indices.clear();
     // assign new record indices
     this->_record_indices = temp._record_indices;
-    this->_n_records = this->_record_indices.size();
+    this->_n_records = temp._n_records;
+    if (debug) cout << "n records self:" << this->_n_records << endl;
+
+    this->_selected_field_names = selected_fields;
+    temp._selected_field_names = selected_fields;
 
     return temp;
 }
