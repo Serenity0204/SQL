@@ -25,12 +25,14 @@ public:
     // // Print command
     // void print_lookup() { _command.print_lookup(); }
     void batch(const char* file);
+    inline bool is_error() { return this->_error; }
     //======================================
     // TODO: add more methods here as needed
     //======================================
 private:
     Table _table;
     Parser _parser;
+    bool _error;
     //======================================
     // TODO: add more methods here as needed
     //======================================

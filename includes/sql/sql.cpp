@@ -19,6 +19,7 @@ Table SQL::command(const string& cmd)
     bool error = false;
     this->_process_cmd(cmd, table, message, error);
     this->_table = table;
+    this->_error = error;
     return this->_table;
 }
 
