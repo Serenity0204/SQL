@@ -166,6 +166,7 @@ void SQL::batch(const char* file)
         {
             cout << "command:" << str << endl;
             Table tb = this->command(str);
+            this->_table = tb;
             cout << tb << endl;
             cout << "records selected: " << this->select_recnos() << endl;
 

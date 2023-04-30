@@ -94,40 +94,44 @@ const vector<string> select_list =
         // select * from studentSample01 where lname = Yang or major = CS and age < 23 or lname = Jackson
 };
 
-bool test_stub(bool debug = false)
+bool sql_batch(bool debug = false)
 {
-    remove("studentSample.bin");
-    remove("studentSample_fields.bin");
+    remove("employeeSample01.bin");
+    remove("employeeSample01_fields.bin");
+    remove("studentSample01.bin");
+    remove("studentSample01_fields.bin");
+
     SQL sql;
-    for (int i = 0; i < 5; ++i)
-    {
-        cout << sql.command(command_list[i]) << endl;
-        cout << endl
-             << endl;
-    }
-    for (int i = 0; i < select_list.size(); ++i)
-    {
-        cout << select_list[i] << endl;
-        // cout << sql.command(select_list[i]) << endl
-        //      << endl
-        //      << endl;
-        Table t = sql.command(select_list[i]);
-        cout << t << endl
-             << endl
-             << endl;
-        cout << "size:" << t.select_recnos().size() << endl;
-        cout << "selected recnos:" << t.select_recnos() << endl;
-    }
-    remove("studentSample.bin");
-    remove("studentSample_fields.bin");
+    string s = "_!sample01.txt";
+    sql.batch(s.c_str());
+
+    remove("employeeSample01.bin");
+    remove("employeeSample01_fields.bin");
+    remove("studentSample01.bin");
+    remove("studentSample01_fields.bin");
+
+    // remove("studentSelect02.bin");
+    // remove("studentSelect02_fields.bin");
+    // remove("employeeSample02.bin");
+    // remove("employeeSample02_fields.bin");
+    // // SQL sql;
+    // // string
+    // s = "_!sample02.txt";
+    // sql.batch(s.c_str());
+
+    // remove("studentSelect02.bin");
+    // remove("studentSelect02_fields.bin");
+    // remove("employeeSample02.bin");
+    // remove("employeeSample02_fields.bin");
+    return true;
 }
 
 // Lord help me!
 const bool debug = false;
 
-TEST(TEST_STUB, TestStub)
+TEST(SQL_BASIC, SQLBatch)
 {
-    bool success = test_stub(debug);
+    bool success = sql_batch(debug);
     EXPECT_EQ(success, true);
 }
 
