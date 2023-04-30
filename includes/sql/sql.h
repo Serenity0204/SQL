@@ -22,11 +22,12 @@ public:
     // Process a command and return the result table
     Table command(const string& cmd);
     // Get all selected record numbers
-    vector<long> select_recnos() { return _table.select_recnos(); }
+    vector<long> select_recnos() { return this->_table.select_recnos(); }
     // // Print command
     // void print_lookup() { _command.print_lookup(); }
     void batch(const char* file);
     inline bool is_error() { return this->_error; }
+    void print_lookup() { this->_ptree.print_lookup(); }
     //======================================
     // TODO: add more methods here as needed
     //======================================
@@ -34,6 +35,7 @@ private:
     Table _table;
     Parser _parser;
     bool _error;
+    MMap<string, string> _ptree;
     //======================================
     // TODO: add more methods here as needed
     //======================================

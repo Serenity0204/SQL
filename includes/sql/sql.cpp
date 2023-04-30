@@ -29,6 +29,7 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
 
     this->_parser.set_string(cmd);
     MMap<string, string> parsed_tree = this->_parser.parse_tree();
+    this->_ptree = parsed_tree;
     if (parsed_tree.empty())
     {
         table = Table();
