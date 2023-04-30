@@ -287,7 +287,8 @@ vector<long> Table::_select_helper(const string& field_name, const string& op, c
         for (it = this->_cache[field_name].begin(); it != this->_cache[field_name].end(); ++it)
         {
             if ((*it).key == field_value) continue;
-                }
+            res += (*it).value_list;
+        }
         return res;
     }
     if (op == "LIKE")
