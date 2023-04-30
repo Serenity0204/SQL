@@ -86,31 +86,31 @@ bool sql_basic(bool debug = false)
 
 bool sql_batch(bool debug = false)
 {
-    // remove("employeeSample01.bin");
-    // remove("employeeSample01_fields.bin");
-    // remove("studentSample01.bin");
-    // remove("studentSample01_fields.bin");
+    remove("employeeSample01.bin");
+    remove("employeeSample01_fields.bin");
+    remove("studentSample01.bin");
+    remove("studentSample01_fields.bin");
 
-    // SQL sql;
-    // string s = "../../batch/input/_!sample01.txt";
-    // sql.batch(s.c_str());
-
-    // remove("employeeSample01.bin");
-    // remove("employeeSample01_fields.bin");
-    // remove("studentSample01.bin");
-    // remove("studentSample01_fields.bin");
-    remove("studentSelect02.bin");
-    remove("studentSelect02_fields.bin");
-    remove("employeeSample02.bin");
-    remove("employeeSample02_fields.bin");
     SQL sql;
-    string s = "../../batch/input/_!sample02.txt";
+    string s = "_!sample01.txt";
     sql.batch(s.c_str());
+
+    remove("employeeSample01.bin");
+    remove("employeeSample01_fields.bin");
+    remove("studentSample01.bin");
+    remove("studentSample01_fields.bin");
+    // remove("studentSelect02.bin");
+    // remove("studentSelect02_fields.bin");
+    // remove("employeeSample02.bin");
+    // remove("employeeSample02_fields.bin");
+    // SQL sql;
+    // string s = "../../batch/input/_!sample02.txt";
+    // sql.batch(s.c_str());
     
-    remove("studentSelect02.bin");
-    remove("studentSelect02_fields.bin");
-    remove("employeeSample02.bin");
-    remove("employeeSample02_fields.bin");
+    // remove("studentSelect02.bin");
+    // remove("studentSelect02_fields.bin");
+    // remove("employeeSample02.bin");
+    // remove("employeeSample02_fields.bin");
     return true;
 }
 

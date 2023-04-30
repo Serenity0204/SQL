@@ -138,8 +138,20 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
 
 void SQL::batch(const char* file)
 {
+#ifdef WIN32
+    mkdir("../../batch/output");
+#else
+    mkdir("../../batch/output", 0755);
+#endif
+
     ifstream f;
-    f.open(file);
+    string temp = file;
+    string input_file_path = "../../batch/input/" + temp;
+    string output_file_path = "../../batch/output/output_" + temp;
+
+    f.open(input_file_path.c_str());
+    ofstream o;
+    o.open(output_file_path.c_str());
 
     if (f.fail())
     {
@@ -147,6 +159,7 @@ void SQL::batch(const char* file)
         return;
     }
     cout << "------------------------------Batch Begins------------------------------" << endl;
+    o << "------------------------------Batch Begins------------------------------" << endl;
     while (!f.eof())
     {
         string str;
@@ -155,18 +168,27 @@ void SQL::batch(const char* file)
         if (str[0] == '/')
         {
             cout << str << endl;
+            o << str << endl;
             continue;
         }
         if (!str.empty())
         {
             cout << "command:" << str << endl;
+            o << "command:" << str << endl;
             Table tb = this->command(str);
             cout << tb << endl;
+            o << tb << endl;
             cout << "records selected: " << this->select_recnos() << endl;
+            o << "records selected: " << this->select_recnos() << endl;
             cout << endl;
             cout << endl;
+            o << endl;
+            o << endl;
         }
     }
+
     f.close();
     cout << "------------------------------DONE------------------------------" << endl;
+    o << "------------------------------DONE------------------------------" << endl;
+    o.close();
 }

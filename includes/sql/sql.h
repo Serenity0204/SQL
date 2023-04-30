@@ -1,13 +1,14 @@
 #ifndef SQL_H
 #define SQL_H
 
-#include <cassert>  // assert
-#include <fstream>  // ifstream
-#include <iostream> // cout, endl
-
 #include "../../includes/map/mmap.h"
 #include "../../includes/parser/parser.h"
 #include "../../includes/table/table.h"
+#include <cassert>  // assert
+#include <fstream>  // ifstream
+#include <iostream> // cout, endl
+#include <sys/stat.h>
+#include <sys/types.h>
 
 using namespace std;
 
