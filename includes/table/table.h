@@ -109,6 +109,23 @@ private:
         }
         return true;
     }
+    inline void _set_fields(const vector<string>& selected_fields, Table& temp)
+    {
+        // select all fields
+        if (selected_fields.empty() || selected_fields[0] == "*")
+        {
+
+            this->_field_names = this->get_original_fields();
+            this->_selected_field_names = this->get_original_fields();
+            temp._field_names = this->get_original_fields();
+            temp._selected_field_names = this->get_original_fields();
+        }
+        if (!selected_fields.empty() && selected_fields[0] != "*")
+        {
+            this->_selected_field_names = selected_fields;
+            temp._selected_field_names = selected_fields;
+        }
+    }
 
 public:
     // TYPEDEFS
@@ -148,6 +165,7 @@ public:
     inline vector<string> get_fields() { return this->_selected_field_names; }
     // Get the number of records in the table
     inline long record_count() const { return this->_n_records; }
+    inline vector<string> get_original_fields() { return this->_field_names; }
 };
 
 #endif // TABLE_H

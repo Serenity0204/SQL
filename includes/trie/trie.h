@@ -2,15 +2,15 @@
 #define TRIE_H
 
 #include <iostream>
+#include <map>
 #include <memory>
-#include <unordered_map>
 #include <vector>
 using namespace std;
 
 struct TrieNode
 {
 public:
-    unordered_map<char, shared_ptr<TrieNode>> _children;
+    map<char, shared_ptr<TrieNode>> _children;
     bool _is_word;
     TrieNode()
         : _is_word(false)

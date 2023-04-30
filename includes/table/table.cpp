@@ -317,20 +317,16 @@ Table Table::select(const vector<string>& selected_fields, const string& field_n
     Table temp;
 
     // select all fields
-    bool changed_fields = false;
-    if (selected_fields.empty() || selected_fields[0] == "*")
-    {
-        temp._field_names = this->_field_names;
-        changed_fields = true;
-    }
-    if (!changed_fields && !this->_check_error_fields(selected_fields)) return temp;
+    this->_set_fields(selected_fields, temp);
+    if (!this->_check_error_fields(selected_fields)) return temp;
 
-    // check if field name exists
-    if (!Helper::is_in(this->_field_names, field_name)) return temp;
+    if (!this->_check_error_fields(selected_fields)) return temp;
 
     // reorder the selected fields
     vector<string> reordered;
-    this->_reorder_fields(selected_fields, reordered);
+    vector<string> selected_temp = this->_selected_field_names;
+    this->_reorder_fields(selected_temp, reordered);
+
     // copy members
     temp._table_name = this->_table_name;
     temp._field_names = reordered;
@@ -374,18 +370,14 @@ Table Table::select(const vector<string>& selected_fields, const Queue<shared_pt
     const bool debug = false;
     Table temp;
 
-    bool changed_fields = false;
-    // select all fields
-    if (selected_fields.empty() || selected_fields[0] == "*")
-    {
-        temp._field_names = this->_field_names;
-        changed_fields = true;
-    }
-    // if (!changed_fields && !this->_check_error_fields(selected_fields)) return temp;
+    this->_set_fields(selected_fields, temp);
+    if (!this->_check_error_fields(selected_fields)) return temp;
 
     // reorder the selected fields
     vector<string> reordered;
-    this->_reorder_fields(selected_fields, reordered);
+    vector<string> selected_temp = this->_selected_field_names;
+    this->_reorder_fields(selected_temp, reordered);
+
     // copy members
     temp._table_name = this->_table_name;
     temp._field_names = reordered;
