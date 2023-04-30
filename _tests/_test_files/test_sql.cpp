@@ -99,18 +99,20 @@ bool sql_batch(bool debug = false)
     remove("employeeSample01_fields.bin");
     remove("studentSample01.bin");
     remove("studentSample01_fields.bin");
-    // remove("studentSelect02.bin");
-    // remove("studentSelect02_fields.bin");
-    // remove("employeeSample02.bin");
-    // remove("employeeSample02_fields.bin");
+
+    remove("studentSelect02.bin");
+    remove("studentSelect02_fields.bin");
+    remove("employeeSample02.bin");
+    remove("employeeSample02_fields.bin");
     // SQL sql;
-    // string s = "../../batch/input/_!sample02.txt";
-    // sql.batch(s.c_str());
-    
-    // remove("studentSelect02.bin");
-    // remove("studentSelect02_fields.bin");
-    // remove("employeeSample02.bin");
-    // remove("employeeSample02_fields.bin");
+    // string 
+    s = "_!sample02.txt";
+    sql.batch(s.c_str());
+
+    remove("studentSelect02.bin");
+    remove("studentSelect02_fields.bin");
+    remove("employeeSample02.bin");
+    remove("employeeSample02_fields.bin");
     return true;
 }
 

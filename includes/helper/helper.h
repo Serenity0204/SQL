@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 #include <utility>
@@ -82,31 +83,31 @@ namespace Helper
 
         return res;
     }
-    inline void generate_tokens(const vector<string>& input, Queue<Token*>& infix)
+    inline void generate_tokens(const vector<string>& input, Queue<shared_ptr<Token>>& infix)
     {
         for (const auto& tk : input)
         {
             if (tk == ">=" || tk == "<=" || tk == ">" || tk == "<" || tk == "=" || tk == "!=" || tk == "LIKE")
             {
-                infix.push(new Relational(tk));
+                infix.push(make_shared<Relational>(tk));
                 continue;
             }
             if (tk == "(")
             {
-                infix.push(new LeftParen());
+                infix.push(make_shared<LeftParen>());
                 continue;
             }
             if (tk == ")")
             {
-                infix.push(new RightParen());
+                infix.push(make_shared<RightParen>());
                 continue;
             }
             if (tk == "and" || tk == "or")
             {
-                infix.push(new Logical(tk));
+                infix.push(make_shared<Logical>(tk));
                 continue;
             }
-            infix.push(new TokenStr(tk));
+            infix.push(make_shared<TokenStr>(tk));
         }
     }
 }

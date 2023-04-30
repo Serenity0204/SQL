@@ -357,24 +357,19 @@ Table Table::select(const vector<string>& selected_fields, const string& field_n
 Table Table::select(const vector<string>& selected_fields, const vector<string>& expression)
 {
     const bool debug = false;
-    Queue<Token*> infix;
+    Queue<shared_ptr<Token>> infix;
     Helper::generate_tokens(expression, infix);
 
     ShuntingYard sy(infix);
-    Queue<Token*> postfix = sy.postfix();
+    Queue<shared_ptr<Token>> postfix = sy.postfix();
     if (debug) cout << "postfix:" << postfix << endl;
     Table temp = this->select(selected_fields, postfix);
+    infix.clear();
 
-    if (!infix.empty())
-    {
-        typename Queue<Token*>::Iterator it;
-        for (it = infix.begin(); it != infix.end(); ++it) delete *it;
-        infix.clear();
-    }
     return temp;
 }
 
-Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& expression)
+Table Table::select(const vector<string>& selected_fields, const Queue<shared_ptr<Token>>& expression)
 {
     const bool debug = false;
     Table temp;
@@ -414,17 +409,17 @@ Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& 
     return temp;
 }
 
-vector<long> Table::_rpn(const Queue<Token*>& postfix)
+vector<long> Table::_rpn(const Queue<shared_ptr<Token>>& postfix)
 {
     const bool debug = false;
-    Stack<Token*> s;
-    Queue<Token*> q = postfix;
+    Stack<shared_ptr<Token>> s;
+    Queue<shared_ptr<Token>> q = postfix;
     Stack<vector<long>> indices;
     if (debug) cout << q << endl;
 
     while (!q.empty())
     {
-        Token* token = q.pop();
+        shared_ptr<Token> token = q.pop();
         if (token->token_type() == TOKEN_TOKENSTR)
         {
             s.push(token);

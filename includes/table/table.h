@@ -6,9 +6,10 @@
 #include <fstream>  // fstream
 #include <iomanip>  // setw
 #include <iostream> // cout, endl
-#include <set>      // std::set
-#include <string>   // string
-#include <vector>   // vector
+#include <memory>
+#include <set>    // std::set
+#include <string> // string
+#include <vector> // vector
 
 #include "../binary_files/file_record.h"
 #include "../binary_files/utilities.h"
@@ -55,7 +56,7 @@ private:
     void _index();
     vector<long> _select_helper(const string& field_name, const string& op, const string& field_value);
     void _read_helper(Table& temp);
-    vector<long> _rpn(const Queue<Token*>& postfix);
+    vector<long> _rpn(const Queue<shared_ptr<Token>>& postfix);
 
     inline vector<long> _bound_helper(const mmap_sl_it& begin, const mmap_sl_it& end)
     {
@@ -134,7 +135,7 @@ public:
     // SQL: SELECT
     Table select(const vector<string>& selected_fields, const string& field_name, const string& op, const string& field_value);
     Table select(const vector<string>& selected_fields, const vector<string>& expression = vector<string>());
-    Table select(const vector<string>& selected_fields, const Queue<Token*>& expression);
+    Table select(const vector<string>& selected_fields, const Queue<shared_ptr<Token>>& expression);
     Table select_all(const vector<string>& selected_fields = vector<string>());
 
     // Get all selected record numbers
