@@ -1,7 +1,7 @@
 # SQL
 
 A naive version of implementation of relational database including a SQL like language for interacting with the database itself.
-most of the data structures used in this project is implemented from scratch, with the exception of std::set and std::vector. This
+most of the data structures used in this project are implemented from scratch, with the exception of std::set and std::vector. This
 project supports two modes to interact with the database, the first one is command line mode, the second one is batch mode(read from files).
 The supported sql like statements include select, insert, and create.
 
