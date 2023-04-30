@@ -23,7 +23,7 @@ namespace Helper
         return false;
     }
 
-    inline bool comparePair(const std::pair<std::string, long>& a, const std::pair<std::string, long>& b)
+    inline bool compare_pair(const std::pair<std::string, long>& a, const std::pair<std::string, long>& b)
     {
         return a.second < b.second;
     }
@@ -36,7 +36,7 @@ namespace Helper
         {
             to_sort.push_back(std::make_pair(vec1[i], vec2[i]));
         }
-        std::sort(to_sort.begin(), to_sort.end(), comparePair);
+        std::sort(to_sort.begin(), to_sort.end(), compare_pair);
 
         vec1.clear();
         vec2.clear();
