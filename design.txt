@@ -1,6 +1,18 @@
 project structure:
     --_tests // unit test using gtest framework(setup included in cmake)
+    --batch // batch files
     --includes // where all of the code reside
+        --binary_files // binary file IO
+        --helper // helper functions
+        --linked_list // self implemented linked list functions, stack and queue classes
+        --map // map and multimap implemented using B+ tree
+        --parser // a parser for sql statement implemented using state machine
+        --shunting_yard // convert infix sql statement to postfix
+        --sql // main composition of all other classes
+        --table // a class to do selection of entries based on input conditions
+        --token // token class for shunting_yard
+        --tokenizer // tokenizing input string into tokens using state machine
+        -- trie // a trie implementation for prefix selection
     --main.cpp // the main entry of the program
     --design.txt // project introduction
     --CMakeLists.txt // cmake for this project
