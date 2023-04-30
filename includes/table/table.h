@@ -18,6 +18,7 @@
 #include "../map/mmap.h"
 #include "../shunting_yard/shunting_yard.h"
 #include "../token/token_includes.h"
+#include "../trie/trie.h"
 
 class Table
 {

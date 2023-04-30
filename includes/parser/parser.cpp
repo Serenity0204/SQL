@@ -217,6 +217,12 @@ void Parser::_tokenize()
             // cout << "op:" << token.token_str() << endl;
             this->_types.push_back(RELATIONAL);
         }
+        if (token.type() == TOKEN_ALPHA && token.token_str() == "LIKE")
+        {
+            did_push = true;
+            this->_types.push_back(RELATIONAL);
+        }
+        
         if (token.type() == TOKEN_PAREN) this->_types.push_back(PARENS);
         if (token.type() == TOKEN_STAR && token.token_str() == "*") this->_types.push_back(ASTERISK);
         if (token.type() == TOKEN_COMMA && token.token_str() == ",") this->_types.push_back(COMMAS);
