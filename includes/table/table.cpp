@@ -367,7 +367,29 @@ Table Table::select(const vector<string>& selected_fields, const vector<string>&
     if (!infix.empty())
     {
         typename Queue<Token*>::Iterator it;
-        for (it = infix.begin(); it != infix.end(); ++it) delete *it;
+        for (it = infix.begin(); it != infix.end(); ++it)
+        {
+            switch ((*it)->token_type())
+            {
+            case TOKEN_TOKENSTR:
+                delete static_cast<TokenStr*>((*it));
+                break;
+            case TOKEN_RIGHTPAREN:
+                delete static_cast<RightParen*>((*it));
+                break;
+            case TOKEN_LEFTPAREN:
+                delete static_cast<LeftParen*>((*it));
+                break;
+            case TOKEN_LOGICAL:
+                delete static_cast<Logical*>((*it));
+                break;
+            case TOKEN_RELATIONAL:
+                delete static_cast<Relational*>((*it));
+                break;
+            default:
+                break;
+            }
+        }
         infix.clear();
     }
     return temp;
