@@ -6,10 +6,9 @@
 #include <fstream>  // fstream
 #include <iomanip>  // setw
 #include <iostream> // cout, endl
-#include <memory>
-#include <set>    // std::set
-#include <string> // string
-#include <vector> // vector
+#include <set>      // std::set
+#include <string>   // string
+#include <vector>   // vector
 
 #include "../binary_files/file_record.h"
 #include "../binary_files/utilities.h"
@@ -19,7 +18,6 @@
 #include "../map/mmap.h"
 #include "../shunting_yard/shunting_yard.h"
 #include "../token/token_includes.h"
-#include "../trie/trie.h"
 
 class Table
 {
@@ -35,7 +33,7 @@ private:
     long _n_records;
     // selected records' numbers
     vector<long> _record_indices;
-
+    long _total_records;
     // Map<field_name->string, MMap<field_value->string, index->long>>
     // field name: name age gender
     //             John 15  Male -> first entry
@@ -56,7 +54,7 @@ private:
     void _index();
     vector<long> _select_helper(const string& field_name, const string& op, const string& field_value);
     void _read_helper(Table& temp);
-    vector<long> _rpn(const Queue<shared_ptr<Token>>& postfix);
+    vector<long> _rpn(const Queue<Token*>& postfix);
 
     inline vector<long> _bound_helper(const mmap_sl_it& begin, const mmap_sl_it& end)
     {
@@ -109,23 +107,6 @@ private:
         }
         return true;
     }
-    inline void _set_fields(const vector<string>& selected_fields, Table& temp)
-    {
-        // select all fields
-        if (selected_fields.empty() || selected_fields[0] == "*")
-        {
-
-            this->_field_names = this->get_original_fields();
-            this->_selected_field_names = this->get_original_fields();
-            temp._field_names = this->get_original_fields();
-            temp._selected_field_names = this->get_original_fields();
-        }
-        if (!selected_fields.empty() && selected_fields[0] != "*")
-        {
-            this->_selected_field_names = selected_fields;
-            temp._selected_field_names = selected_fields;
-        }
-    }
 
 public:
     // TYPEDEFS
@@ -152,7 +133,7 @@ public:
     // SQL: SELECT
     Table select(const vector<string>& selected_fields, const string& field_name, const string& op, const string& field_value);
     Table select(const vector<string>& selected_fields, const vector<string>& expression = vector<string>());
-    Table select(const vector<string>& selected_fields, const Queue<shared_ptr<Token>>& expression);
+    Table select(const vector<string>& selected_fields, const Queue<Token*>& expression);
     Table select_all(const vector<string>& selected_fields = vector<string>());
 
     // Get all selected record numbers
@@ -163,9 +144,10 @@ public:
     inline string title() const { return _table_name; }
     // Get the fields of the table
     inline vector<string> get_fields() { return this->_selected_field_names; }
+    inline vector<string> get_original_fields() { return this->_field_names; }
     // Get the number of records in the table
     inline long record_count() const { return this->_n_records; }
-    inline vector<string> get_original_fields() { return this->_field_names; }
+    inline long total_records() const { return this->_total_records; }
 };
 
 #endif // TABLE_H

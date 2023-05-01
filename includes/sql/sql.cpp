@@ -42,7 +42,7 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
     string command = parsed_tree["command"][0];
     string file_name = table_name + ".bin";
 
-    if (command == "create")
+    if (command == "create" || command == "make")
     {
 
         if (file_exists(file_name.c_str()))
@@ -137,7 +137,7 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
     }
 }
 
-void SQL::batch(const char* file)
+void SQL::batch(const char* file, bool file_mode)
 {
     ifstream f;
     string temp = file;
@@ -150,7 +150,18 @@ void SQL::batch(const char* file)
         cout << "No file named " << file << " exists." << endl;
         return;
     }
-    cout << "------------------------------Batch Begins------------------------------" << endl;
+    ofstream o;
+    if (file_mode)
+    {
+        o.open("../../batch/output.txt");
+        if (o.fail())
+        {
+            cout << "cannot find output.txt" << endl;
+            return;
+        }
+    }
+    if (!file_mode) cout << "------------------------------Batch Begins------------------------------" << endl;
+    if (file_mode) o << "------------------------------Batch Begins------------------------------" << endl;
     while (!f.eof())
     {
         string str;
@@ -158,23 +169,36 @@ void SQL::batch(const char* file)
 
         if (str[0] == '/')
         {
-            cout << str << endl;
-            // o << str << endl;
+            if (!file_mode) cout << str << endl;
+            if (file_mode) o << str << endl;
             continue;
         }
         if (!str.empty())
         {
-            cout << "command:" << str << endl;
+            if (!file_mode) cout << "command:" << str << endl;
+            if (file_mode) o << "command:" << str << endl;
             Table tb = this->command(str);
             this->_table = tb;
-            cout << tb << endl;
-            cout << "records selected: " << this->select_recnos() << endl;
 
-            cout << endl;
-            cout << endl;
+            if (!file_mode)
+            {
+                cout << tb << endl;
+                cout << "records selected: " << this->select_recnos() << endl;
+                cout << endl;
+                cout << endl;
+            }
+            if (file_mode)
+            {
+                o << tb << endl;
+                o << "records selected: " << this->select_recnos() << endl;
+                o << endl;
+                o << endl;
+            }
         }
     }
 
     f.close();
-    cout << "------------------------------DONE------------------------------" << endl;
+    if (!file_mode) cout << "------------------------------DONE------------------------------" << endl;
+    if (file_mode) o << "------------------------------DONE------------------------------" << endl;
+    if (file_mode) o.close();
 }

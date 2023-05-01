@@ -7,7 +7,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <map>
-#include <memory>
 #include <set>
 #include <string>
 #include <utility>
@@ -24,7 +23,7 @@ namespace Helper
         return false;
     }
 
-    inline bool compare_pair(const std::pair<std::string, long>& a, const std::pair<std::string, long>& b)
+    inline bool comparePair(const std::pair<std::string, long>& a, const std::pair<std::string, long>& b)
     {
         return a.second < b.second;
     }
@@ -37,7 +36,7 @@ namespace Helper
         {
             to_sort.push_back(std::make_pair(vec1[i], vec2[i]));
         }
-        std::sort(to_sort.begin(), to_sort.end(), compare_pair);
+        std::sort(to_sort.begin(), to_sort.end(), comparePair);
 
         vec1.clear();
         vec2.clear();
@@ -83,31 +82,31 @@ namespace Helper
 
         return res;
     }
-    inline void generate_tokens(const vector<string>& input, Queue<shared_ptr<Token>>& infix)
+    inline void generate_tokens(const vector<string>& input, Queue<Token*>& infix)
     {
         for (const auto& tk : input)
         {
             if (tk == ">=" || tk == "<=" || tk == ">" || tk == "<" || tk == "=" || tk == "!=" || tk == "LIKE")
             {
-                infix.push(make_shared<Relational>(tk));
+                infix.push(new Relational(tk));
                 continue;
             }
             if (tk == "(")
             {
-                infix.push(make_shared<LeftParen>());
+                infix.push(new LeftParen());
                 continue;
             }
             if (tk == ")")
             {
-                infix.push(make_shared<RightParen>());
+                infix.push(new RightParen());
                 continue;
             }
             if (tk == "and" || tk == "or")
             {
-                infix.push(make_shared<Logical>(tk));
+                infix.push(new Logical(tk));
                 continue;
             }
-            infix.push(make_shared<TokenStr>(tk));
+            infix.push(new TokenStr(tk));
         }
     }
 }

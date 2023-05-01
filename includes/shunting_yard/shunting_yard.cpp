@@ -2,29 +2,29 @@
 
 ShuntingYard::ShuntingYard()
 {
-    this->_queue = Queue<shared_ptr<Token>>();
+    this->_queue = Queue<Token*>();
     this->_error = false;
 }
 
-ShuntingYard::ShuntingYard(const Queue<shared_ptr<Token>>& input_q)
+ShuntingYard::ShuntingYard(const Queue<Token*>& input_q)
 {
     this->_queue = input_q;
     this->_error = false;
 }
 
-void ShuntingYard::infix(const Queue<shared_ptr<Token>>& input_q)
+void ShuntingYard::infix(const Queue<Token*>& input_q)
 {
     this->_queue = input_q;
     this->_error = false;
 }
 
 // generate postfix queue from infix queue
-Queue<shared_ptr<Token>> ShuntingYard::postfix()
+Queue<Token*> ShuntingYard::postfix()
 {
     return this->shunting_yard();
 }
 
-Queue<shared_ptr<Token>> ShuntingYard::postfix(const Queue<shared_ptr<Token>>& input_q)
+Queue<Token*> ShuntingYard::postfix(const Queue<Token*>& input_q)
 {
     this->_queue = input_q;
     this->_error = false;
@@ -32,14 +32,14 @@ Queue<shared_ptr<Token>> ShuntingYard::postfix(const Queue<shared_ptr<Token>>& i
 }
 
 // called by postfix()
-Queue<shared_ptr<Token>> ShuntingYard::shunting_yard()
+Queue<Token*> ShuntingYard::shunting_yard()
 {
-    Queue<shared_ptr<Token>> output_queue;
-    Stack<shared_ptr<Token>> operator_stack;
+    Queue<Token*> output_queue;
+    Stack<Token*> operator_stack;
 
     while (!this->_queue.empty())
     {
-        shared_ptr<Token> token = this->_queue.pop();
+        Token* token = this->_queue.pop();
         // cout << token->token_string() << "," << token->token_type() << endl;
         if (token->token_type() == TOKEN_TOKENSTR)
         {

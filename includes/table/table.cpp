@@ -11,6 +11,7 @@ Table::Table()
     this->_to_print = vector<string>();
     this->_n_records = 0;
     this->_table_name = "";
+    this->_total_records = 0;
 }
 
 // SQL: CREATE TABLE
@@ -29,7 +30,7 @@ Table::Table(const string& table_name, const vector<string>& field_names)
     string field_file = table_name + "_fields.bin";
     this->_table_name = table_name;
     this->_field_names = field_names;
-
+    this->_selected_field_names = field_names;
     if (file_exists(table_file.c_str()) || file_exists(field_file.c_str()))
     {
         remove(table_file.c_str());
@@ -61,6 +62,7 @@ Table& Table::operator=(const Table& RHS)
     this->_field_names = RHS._field_names;
     this->_selected_field_names = RHS._selected_field_names;
     this->_n_records = RHS._n_records;
+    this->_total_records = RHS._total_records;
     return *this;
 }
 
@@ -94,6 +96,7 @@ string Table::insert_into(const vector<string>& field_values)
     this->_to_print += field_values;
     // for number of record
     this->_n_records = this->_record_indices.size();
+    this->_total_records++;
     return "insert success";
 }
 
@@ -195,8 +198,6 @@ void Table::_index()
         // read ith entry
         long bytes = r.read(f, i);
         if (bytes == 0) break;
-        // for number of record
-        ++this->_n_records;
         // put the ith_entry into cache
         vector<string> ith_entry = r.get_records_string();
         for (int ith_entry_walker = 0; ith_entry_walker < ith_entry.size(); ++ith_entry_walker)
@@ -213,6 +214,7 @@ void Table::_index()
         this->_record_indices.push_back(i);
         // for print
         this->_to_print += ith_entry;
+        this->_total_records++;
     }
     f.close();
 }
@@ -240,8 +242,11 @@ Table Table::select_all(const vector<string>& selected_fields)
     // copy members
     temp._table_name = this->_table_name;
     temp._field_names = reordered;
+    this->_record_indices.clear();
+    for (int i = 0; i < this->_total_records; ++i) this->_record_indices.push_back(i);
     temp._record_indices = this->_record_indices;
     temp._n_records = this->_n_records;
+    temp._total_records = this->_total_records;
 
     this->_selected_field_names = selected_fields;
     temp._selected_field_names = selected_fields;
@@ -286,23 +291,9 @@ vector<long> Table::_select_helper(const string& field_name, const string& op, c
         typename MMap<string, long>::Iterator it;
         for (it = this->_cache[field_name].begin(); it != this->_cache[field_name].end(); ++it)
         {
+            // cout << (*it).key << "?" << field_name << endl;
             if ((*it).key == field_value) continue;
             res += (*it).value_list;
-        }
-        return res;
-    }
-    if (op == "LIKE")
-    {
-        vector<long> res;
-        Trie trie;
-        set<string> keys;
-        typename MMap<string, long>::Iterator it;
-        for (it = this->_cache[field_name].begin(); it != this->_cache[field_name].end(); ++it) trie.insert((*it).key);
-        vector<string> prefix = trie.get_prefix(field_value);
-        for (it = this->_cache[field_name].begin(); it != this->_cache[field_name].end(); ++it)
-        {
-            string key = (*it).key;
-            if (Helper::is_in(prefix, key)) res += (*it).value_list;
         }
         return res;
     }
@@ -317,16 +308,30 @@ Table Table::select(const vector<string>& selected_fields, const string& field_n
     Table temp;
 
     // select all fields
-    this->_set_fields(selected_fields, temp);
-    if (!this->_check_error_fields(selected_fields)) return temp;
+    bool changed_fields = false;
+    if (selected_fields.empty() || selected_fields[0] == "*")
+    {
+        temp._field_names = this->get_original_fields();
+        temp._selected_field_names = this->get_original_fields();
+        this->_field_names = this->get_original_fields();
+        this->_selected_field_names = this->get_original_fields();
+        changed_fields = true;
+    }
+    if (!selected_fields.empty() && selected_fields[0] != "*")
+    {
+        this->_selected_field_names = selected_fields;
+        temp._selected_field_names = selected_fields;
+    }
 
-    if (!this->_check_error_fields(selected_fields)) return temp;
+    if (!changed_fields && !this->_check_error_fields(selected_fields)) return temp;
+
+    // check if field name exists
+    if (!Helper::is_in(this->_field_names, field_name)) return temp;
 
     // reorder the selected fields
     vector<string> reordered;
     vector<string> selected_temp = this->_selected_field_names;
     this->_reorder_fields(selected_temp, reordered);
-
     // copy members
     temp._table_name = this->_table_name;
     temp._field_names = reordered;
@@ -341,11 +346,9 @@ Table Table::select(const vector<string>& selected_fields, const string& field_n
     this->_record_indices = temp._record_indices;
     this->_n_records = temp._n_records;
 
-    this->_selected_field_names = selected_fields;
-    temp._selected_field_names = selected_fields;
-
     if (debug) cout << "n records self:" << this->_n_records << endl;
     if (debug) cout << "n records temp:" << temp._n_records << endl;
+
     return temp;
 }
 
@@ -353,37 +356,68 @@ Table Table::select(const vector<string>& selected_fields, const string& field_n
 Table Table::select(const vector<string>& selected_fields, const vector<string>& expression)
 {
     const bool debug = false;
-    Queue<shared_ptr<Token>> infix;
+    Queue<Token*> infix;
     Helper::generate_tokens(expression, infix);
 
     ShuntingYard sy(infix);
-    Queue<shared_ptr<Token>> postfix = sy.postfix();
+    Queue<Token*> postfix = sy.postfix();
     if (debug) cout << "postfix:" << postfix << endl;
     Table temp = this->select(selected_fields, postfix);
-    infix.clear();
 
+    if (!infix.empty())
+    {
+        typename Queue<Token*>::Iterator it;
+        for (it = infix.begin(); it != infix.end(); ++it) delete *it;
+        infix.clear();
+    }
     return temp;
 }
 
-Table Table::select(const vector<string>& selected_fields, const Queue<shared_ptr<Token>>& expression)
+Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& expression)
 {
     const bool debug = false;
     Table temp;
 
-    this->_set_fields(selected_fields, temp);
-    if (!this->_check_error_fields(selected_fields)) return temp;
+    bool changed_fields = false;
+    // select all fields
+    if (selected_fields.empty() || selected_fields[0] == "*")
+    {
+
+        this->_field_names = this->get_original_fields();
+        this->_selected_field_names = this->get_original_fields();
+        temp._field_names = this->get_original_fields();
+        temp._selected_field_names = this->get_original_fields();
+        if (debug)
+        {
+            cout << endl;
+            cout << "self changed to:" << this->_selected_field_names << endl;
+            cout << "temp changed to:" << temp._selected_field_names << endl;
+        }
+        changed_fields = true;
+    }
+    if (!selected_fields.empty() && selected_fields[0] != "*")
+    {
+        this->_selected_field_names = selected_fields;
+        temp._selected_field_names = selected_fields;
+    }
+
+    if (!changed_fields && !this->_check_error_fields(selected_fields)) return temp;
 
     // reorder the selected fields
     vector<string> reordered;
     vector<string> selected_temp = this->_selected_field_names;
     this->_reorder_fields(selected_temp, reordered);
-
     // copy members
     temp._table_name = this->_table_name;
     temp._field_names = reordered;
     // assign the indices
     if (debug) cout << "indices:" << this->_rpn(expression) << endl;
-    temp._record_indices = this->_rpn(expression);
+    if (!expression.empty()) temp._record_indices = this->_rpn(expression);
+    if (expression.empty())
+    {
+        temp = this->select_all(temp._field_names);
+        return temp;
+    }
     temp._n_records = temp._record_indices.size();
     if (debug) cout << "n records temp:" << temp._n_records << endl;
 
@@ -395,23 +429,20 @@ Table Table::select(const vector<string>& selected_fields, const Queue<shared_pt
     this->_n_records = temp._n_records;
     if (debug) cout << "n records self:" << this->_n_records << endl;
 
-    this->_selected_field_names = selected_fields;
-    temp._selected_field_names = selected_fields;
-
     return temp;
 }
 
-vector<long> Table::_rpn(const Queue<shared_ptr<Token>>& postfix)
+vector<long> Table::_rpn(const Queue<Token*>& postfix)
 {
     const bool debug = false;
-    Stack<shared_ptr<Token>> s;
-    Queue<shared_ptr<Token>> q = postfix;
+    Stack<Token*> s;
+    Queue<Token*> q = postfix;
     Stack<vector<long>> indices;
     if (debug) cout << q << endl;
 
     while (!q.empty())
     {
-        shared_ptr<Token> token = q.pop();
+        Token* token = q.pop();
         if (token->token_type() == TOKEN_TOKENSTR)
         {
             s.push(token);

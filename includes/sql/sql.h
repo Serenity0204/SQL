@@ -25,7 +25,7 @@ public:
     vector<long> select_recnos() { return this->_table.select_recnos(); }
     // // Print command
     // void print_lookup() { _command.print_lookup(); }
-    void batch(const char* file);
+    void batch(const char* file, bool file_mode = false);
     inline bool is_error() { return this->_error; }
     void print_lookup() { this->_ptree.print_lookup(); }
     //======================================

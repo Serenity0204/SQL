@@ -55,7 +55,7 @@ bool Parser::_parse()
     bool did_where = false;
     if (type == CREATE)
     {
-        this->_parse_tree.insert("command", "create");
+        this->_parse_tree.insert("command", this->_input[0].token_str());
         this->_parse_tree.insert_key("fields");
         this->_parse_tree.insert_key("table_name");
         valid_cmd = true;
@@ -191,7 +191,7 @@ void Parser::_tokenize()
         if (token.type() == TOKEN_ALPHA)
         {
             int prev_size = this->_types.size();
-            if (token.token_str() == "create") this->_types.push_back(CREATE);
+            if (token.token_str() == "create" || token.token_str() == "make") this->_types.push_back(CREATE);
             if (token.token_str() == "table") this->_types.push_back(TABLE);
             if (token.token_str() == "fields") this->_types.push_back(FIELDS);
             if (token.token_str() == "insert") this->_types.push_back(INSERT);
@@ -222,7 +222,7 @@ void Parser::_tokenize()
             did_push = true;
             this->_types.push_back(RELATIONAL);
         }
-        
+
         if (token.type() == TOKEN_PAREN) this->_types.push_back(PARENS);
         if (token.type() == TOKEN_STAR && token.token_str() == "*") this->_types.push_back(ASTERISK);
         if (token.type() == TOKEN_COMMA && token.token_str() == ",") this->_types.push_back(COMMAS);

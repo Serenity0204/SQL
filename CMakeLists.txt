@@ -58,15 +58,22 @@ ADD_EXECUTABLE(main
     ${SOURCE_FILES}
 )
 
-ADD_EXECUTABLE(test_stub
-    _tests/_test_files/test_stub.cpp
+ADD_EXECUTABLE(test_batch1
+    _tests/_test_files/test_batch1.cpp
     ${SOURCE_FILES}
 )
+
+ADD_EXECUTABLE(test_batch2
+    _tests/_test_files/test_batch2.cpp
+    ${SOURCE_FILES}
+)
+
 ADD_EXECUTABLE(test_sql
     _tests/_test_files/test_sql.cpp
     ${SOURCE_FILES}
 )
 
 TARGET_LINK_LIBRARIES(main gtest)
-TARGET_LINK_LIBRARIES(test_stub gtest)
+TARGET_LINK_LIBRARIES(test_batch1 gtest)
+TARGET_LINK_LIBRARIES(test_batch2 gtest)
 TARGET_LINK_LIBRARIES(test_sql gtest)

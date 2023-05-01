@@ -105,7 +105,7 @@ bool sql_batch(bool debug = false)
     remove("employeeSample02.bin");
     remove("employeeSample02_fields.bin");
     // SQL sql;
-    // string 
+    // string
     s = "_!sample02.txt";
     sql.batch(s.c_str());
 
@@ -119,15 +119,9 @@ bool sql_batch(bool debug = false)
 // Lord help me!
 const bool debug = true;
 
-// TEST(SQL_BASIC, SQLBasic)
-// {
-//     bool success = sql_basic(debug);
-//     EXPECT_EQ(success, true);
-// }
-
-TEST(SQL_BASIC, SQLBatch)
+TEST(SQL_BASIC, SQLBasic)
 {
-    bool success = sql_batch(debug);
+    bool success = sql_basic(debug);
     EXPECT_EQ(success, true);
 }
 
