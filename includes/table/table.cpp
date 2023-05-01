@@ -297,7 +297,21 @@ vector<long> Table::_select_helper(const string& field_name, const string& op, c
         }
         return res;
     }
-
+    if (op == "LIKE")
+    {
+        vector<long> res;
+        Trie trie;
+        set<string> keys;
+        typename MMap<string, long>::Iterator it;
+        for (it = this->_cache[field_name].begin(); it != this->_cache[field_name].end(); ++it) trie.insert((*it).key);
+        vector<string> prefix = trie.get_prefix(field_value);
+        for (it = this->_cache[field_name].begin(); it != this->_cache[field_name].end(); ++it)
+        {
+            string key = (*it).key;
+            if (Helper::is_in(prefix, key)) res += (*it).value_list;
+        }
+        return res;
+    }
     // invalid
     return vector<long>();
 }

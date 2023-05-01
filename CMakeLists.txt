@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-project(project_name)
+project(SQL)
 
 #. . . . . . . . . . . . . . . . . . . .
 include(GNUInstallDirs)
@@ -43,6 +43,18 @@ enable_testing()
 # ------------------------------------
 
 
+set(SFML_VERSION "2.5.1")
+
+# Declare SFML as an external project
+FetchContent_Declare(
+  SFML
+  URL https://www.sfml-dev.org/files/SFML-${SFML_VERSION}-sources.zip
+)
+
+# Build SFML as part of the project
+FetchContent_MakeAvailable(SFML)
+
+
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 #   Grab all cpp files from includes folder
@@ -52,6 +64,11 @@ FILE(GLOB_RECURSE SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}   "${INCLUDE
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 
+
+ADD_EXECUTABLE(command_line
+    command_line.cpp
+    ${SOURCE_FILES}
+)
 
 ADD_EXECUTABLE(main
     main.cpp
@@ -73,7 +90,18 @@ ADD_EXECUTABLE(test_sql
     ${SOURCE_FILES}
 )
 
-TARGET_LINK_LIBRARIES(main gtest)
+TARGET_LINK_LIBRARIES(command_line gtest)
 TARGET_LINK_LIBRARIES(test_batch1 gtest)
 TARGET_LINK_LIBRARIES(test_batch2 gtest)
 TARGET_LINK_LIBRARIES(test_sql gtest)
+TARGET_LINK_LIBRARIES(main gtest)
+
+
+TARGET_LINK_LIBRARIES(main sfml-graphics sfml-window sfml-system)
+TARGET_LINK_LIBRARIES(test_batch1 sfml-graphics sfml-window sfml-system)
+TARGET_LINK_LIBRARIES(test_batch2 sfml-graphics sfml-window sfml-system)
+TARGET_LINK_LIBRARIES(test_sql sfml-graphics sfml-window sfml-system)
+TARGET_LINK_LIBRARIES(command_line sfml-graphics sfml-window sfml-system)
+
+
+file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
