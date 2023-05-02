@@ -18,15 +18,15 @@ public:
     }
     ~Logical() {}
     TOKEN_TYPE_PTR token_type() const override { return TOKEN_LOGICAL; }
-    virtual string token_string() const override { return this->_str; }
-    virtual int precedence() const override
+    string token_string() const override { return this->_str; }
+    int precedence() const override
     {
         if (this->_str == "not") return 3;
         if (this->_str == "and") return 2;
         if (this->_str == "or") return 1;
         return -1;
     }
-    virtual void print(ostream& outs) const override { outs << this->_str; }
+    void print(ostream& outs) const override { outs << this->_str; }
     friend ostream& operator<<(ostream& outs, const Logical& token)
     {
         token.print(outs);
