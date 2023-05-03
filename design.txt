@@ -12,7 +12,7 @@ project structure:
         --table // a class to do selection of entries based on input conditions
         --token // token class for shunting_yard
         --tokenizer // tokenizing input string into tokens using state machine
-        -- trie // a trie implementation for prefix selection
+        --trie // a trie implementation for prefix selection
     --command_line.cpp // the main entry of the program in cmd
     --design.txt // project introduction
     --CMakeLists.txt // cmake for this project

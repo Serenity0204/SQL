@@ -153,7 +153,13 @@ void SQL::batch(const char* file, bool file_mode)
     ofstream o;
     if (file_mode)
     {
-        o.open("../../batch/output.txt");
+#ifdef WIN32
+        mkdir("../../batch/output");
+#else
+        mkdir("../../batch/output", 0755);
+#endif
+        string output_file = "../../batch/output/output_" + temp;
+        o.open(output_file.c_str());
         if (o.fail())
         {
             cout << "cannot find output.txt" << endl;
