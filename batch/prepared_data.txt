@@ -1,0 +1,9 @@
+create table student101 fields  name, 		age, 			major, id
+insert into student101 values Daniel, 		18, 			"Computer Engineering", 12345
+insert into student101 values "Danny", 	20, 		Sociology, 12346
+insert into student101 values Danniella, 21, English                , 12754
+insert into student101 values "Dan 12345 Weird Name", 50, 	"MATH Not Meth"     ,    66666
+insert into student101 values "Normal guy John",	25, 			"Phys Ed", 00000
+insert into student101 values "Another John",	25, 		"Physics", 11111
+insert into student101 values "Annie Davis", 31, "Visual Art", 22222
+insert into student101 values Anny, 25, Chemistry, 33333

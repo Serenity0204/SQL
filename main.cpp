@@ -17,7 +17,13 @@ int main(int argc, char* argv[])
             system("cls");
             continue;
         }
-
+        if (input == "prep")
+        {
+            remove("student101.bin");
+            remove("student101_fields.bin");
+            sql.batch("prepared_data.txt", true);
+            continue;
+        }
         if (input == "end") break;
         std::cout << "input:" << input << std::endl;
         Table tb = sql.command(input);
