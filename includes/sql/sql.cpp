@@ -158,7 +158,7 @@ void SQL::batch(const char* file, bool file_mode)
 #else
         mkdir("../../batch/output", 0755);
 #endif
-        string output_file = "../../batch/output/output_" + temp;
+        string output_file = "../../batch/output/output.txt";
         o.open(output_file.c_str());
         if (o.fail())
         {
