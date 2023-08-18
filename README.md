@@ -26,20 +26,30 @@ project supports two modes to interact with the database, the first one is comma
 - !=, = , <, >, >=, <=
 
 ## Example of Inputs
+```
+// create table
+create table student101 fields  name, 		age, 			major, id
 
-- create table employee fields last_name, first_name, major
-- make table employee fields last_name, first_name, major
-- insert into employee values Blow, Joe, CS
-- insert into employee values "Jackson", Billy, Math
-- select first_name, last_name from student
-- select \* from student
-- select \* from student where last_name
-- select \* from student where age < 23
-- select \* from student where last_name = Yang and age < 23
-- select \* from student where (last_name = Yang or major = CS) and age < 23
-- select \* from student where not last_name = Yang and not major = CS
-- select \* from student where age = 18 and name LIKE Dan
+// insert into table
+insert into student101 values Daniel, 		18, 			"Computer Engineering", 12345
+insert into student101 values "Danny", 	20, 		Sociology, 12346
+insert into student101 values Danniella, 21, English                , 12754
+insert into student101 values "Dan 12345 Weird Name", 50, 	"MATH Not Meth"     ,    66666
+insert into student101 values "Normal guy John",	25, 			"Phys Ed", 00000
+insert into student101 values "Another John",	25, 		"Physics", 11111
+insert into student101 values "Annie Davis", 31, "Visual Art", 22222
+insert into student101 values Anny, 25, Chemistry, 33333
 
+// select
+select name, major from student101
+select * from student101
+select * from student101 where name = Anny
+select * from student101 where age < 23
+select * from student101 where name = Daniel or ( age >= 19 and age <= 21 )
+select * from student101 where (name = Daniel or age >= 19) and age < 21 
+select * from student101 where name != Daniel and major != English
+select * from student101 where age = 18 and name LIKE Dan
+```
 ## Design
 
 change the repo name:

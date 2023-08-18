@@ -6,16 +6,20 @@ int main(int argc, char* argv[])
     std::cout << "--------------------------------------------------------WELCOME--------------------------------------------------------" << std::endl;
     do
     {
-        std::cout << "Type \"end\" to end" << std::endl;
+        std::cout << "Type \"end\" to end, \"prep\" to use prep data, and \"cls\" or \"clear\" to clean the screen" << std::endl;
         std::cout << ">>";
         string input = "";
         getline(std::cin, input);
         std::cout << endl;
 
         if (input.empty()) continue;
-        if (input == "cls")
+        if (input == "cls" || input == "clear")
         {
-            system("cls");
+#ifdef _WIN32              // Check if the operating system is Windows
+            system("cls"); // Clear screen for Windows
+#else
+            system("clear"); // Clear screen for other systems (e.g., Linux)
+#endif
             continue;
         }
         if (input == "prep")
