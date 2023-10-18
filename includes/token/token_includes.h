@@ -1,5 +1,6 @@
 #ifndef TOKEN_INCLUDES_H
 #define TOKEN_INCLUDES_H
+#pragma once
 
 #include "constants.h"
 #include "leftparen.h"

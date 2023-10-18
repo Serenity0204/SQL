@@ -1,5 +1,6 @@
 #ifndef MYSTACK_H
 #define MYSTACK_H
+#pragma once
 
 #include <iomanip>
 #include <iostream>

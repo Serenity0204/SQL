@@ -1,5 +1,6 @@
 #ifndef TOKENSTR_H
 #define TOKENSTR_H
+#pragma once
 #include "token.h"
 
 class TokenStr : public Token

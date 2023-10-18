@@ -1,5 +1,6 @@
 #ifndef RIGHTPAREN_H
 #define RIGHTPAREN_H
+#pragma once
 #include "token.h"
 
 class RightParen : public Token

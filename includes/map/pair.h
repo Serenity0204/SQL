@@ -1,5 +1,7 @@
 #ifndef PAIR_H
 #define PAIR_H
+#pragma once
+
 #include <iostream>
 
 template <typename K, typename V>

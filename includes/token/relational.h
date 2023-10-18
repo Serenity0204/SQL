@@ -1,5 +1,6 @@
 #ifndef RELATIONAL_H
 #define RELATIONAL_H
+#pragma once
 #include "token.h"
 
 class Relational : public Token

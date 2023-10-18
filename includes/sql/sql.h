@@ -1,5 +1,6 @@
 #ifndef SQL_H
 #define SQL_H
+#pragma once
 
 #include "../../includes/map/mmap.h"
 #include "../../includes/parser/parser.h"

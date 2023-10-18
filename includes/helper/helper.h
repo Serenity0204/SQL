@@ -1,5 +1,6 @@
 #ifndef HELPER_H
 #define HELPER_H
+#pragma once
 
 #include "../linked_list/queue/MyQueue.h"
 #include "../token/token_includes.h"

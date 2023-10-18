@@ -1,5 +1,6 @@
 #ifndef BTREE_ARRAY_FUNCTIONS_H
 #define BTREE_ARRAY_FUNCTIONS_H
+#pragma once
 
 #include <cassert> // Provides assert
 #include <cstdlib> // Provides size_t

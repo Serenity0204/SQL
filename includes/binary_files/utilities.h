@@ -1,5 +1,6 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
+#pragma once
 
 #include <fstream>  // fstream
 #include <iostream> // cout, endl

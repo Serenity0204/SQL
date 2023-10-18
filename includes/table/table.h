@@ -1,5 +1,6 @@
 #ifndef TABLE_H
 #define TABLE_H
+#pragma once
 
 #include <cassert>  // assert
 #include <cstring>  // strcmp

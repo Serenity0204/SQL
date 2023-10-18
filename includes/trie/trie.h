@@ -1,5 +1,6 @@
 #ifndef TRIE_H
 #define TRIE_H
+#pragma once
 
 #include <iostream>
 #include <memory>

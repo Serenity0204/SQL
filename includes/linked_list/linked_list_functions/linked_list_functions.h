@@ -1,9 +1,9 @@
 #ifndef LINKED_LIST_FUNCTIONS_H
 #define LINKED_LIST_FUNCTIONS_H
-
-#include <cassert>
+#pragma once
 
 #include "../node/node.h"
+#include <cassert>
 
 // Declaration
 // Linked List General Functions:

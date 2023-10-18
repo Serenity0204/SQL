@@ -1,5 +1,6 @@
 #ifndef STATE_MACHINE_FUNCTIONS_H
 #define STATE_MACHINE_FUNCTIONS_H
+#pragma once
 
 #include "constants.h"
 #include <cassert>

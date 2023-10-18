@@ -1,5 +1,7 @@
 #ifndef LEFTPAREN_H
 #define LEFTPAREN_H
+#pragma once
+
 #include "token.h"
 
 class LeftParen : public Token

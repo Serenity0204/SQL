@@ -1,5 +1,6 @@
 #ifndef FILE_RECORD_H
 #define FILE_RECORD_H
+#pragma once
 
 #include <cstring>  // strncpy
 #include <fstream>  // fstream

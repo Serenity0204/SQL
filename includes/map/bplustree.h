@@ -1,5 +1,6 @@
 #ifndef BPLUSTREE_H
 #define BPLUSTREE_H
+#pragma once
 
 #include <cassert>  // Provides assert
 #include <cstdlib>  // Provides size_t
@@ -72,15 +73,6 @@ public:
         {
             return !this->it;
         }
-        void print_Iterator()
-        {
-            if (!this->is_null())
-            {
-                print_array(this->it->data, this->it->data_count);
-                return;
-            }
-            std::cout << "nullptr iterator" << std::endl;
-        }
 
     private:
         BPlusTree<Item>* it;
@@ -114,7 +106,6 @@ public:
 
     // SIZES
     std::size_t size();
-    std::size_t size_list();
     std::size_t count() const;
 
     // VALIDATORS
@@ -127,10 +118,6 @@ public:
         btree.print(0, outs);
         return outs;
     }
-    // SUGGESTED FUNCTION FOR DEBUGGING
-    std::string in_order() { return ""; }
-    std::string pre_order() { return ""; }
-    std::string post_order() { return ""; }
 
 private:
     // MEMBER CONSTANTS
@@ -221,11 +208,7 @@ std::size_t BPlusTree<Item>::size()
     for (it = this->begin(); it != this->end(); ++it) count++;
     return count;
 }
-template <class Item>
-std::size_t BPlusTree<Item>::size_list()
-{
-    return 0;
-}
+
 template <class Item>
 std::size_t BPlusTree<Item>::count() const
 {

@@ -1,5 +1,6 @@
 #ifndef MYQUEUE_H
 #define MYQUEUE_H
+#pragma once
 
 #include "../linked_list_functions/linked_list_functions.h"
 #include <iomanip>

@@ -1,5 +1,6 @@
 #ifndef STOKENIZE_H
 #define STOKENIZE_H
+#pragma once
 
 #include <cassert>
 #include <cstring>

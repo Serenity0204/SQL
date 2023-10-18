@@ -1,5 +1,6 @@
 #ifndef FTOKENIZE_H
 #define FTOKENIZE_H
+#pragma once
 
 #include <fstream>
 #include <iostream>

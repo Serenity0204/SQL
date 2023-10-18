@@ -1,5 +1,6 @@
 #ifndef MPAIR_H
 #define MPAIR_H
+#pragma once
 
 #include <cstdlib> // Provides std::size_t
 #include <iostream>

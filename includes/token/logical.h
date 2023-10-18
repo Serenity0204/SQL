@@ -1,5 +1,7 @@
 #ifndef LOGICAL_H
 #define LOGICAL_H
+#pragma once
+
 #include "token.h"
 
 class Logical : public Token

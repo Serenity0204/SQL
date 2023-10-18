@@ -1,5 +1,6 @@
 #ifndef SHUNTING_YARD_H
 #define SHUNTING_YARD_H
+#pragma once
 
 #include <cassert>
 #include <iostream>

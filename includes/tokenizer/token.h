@@ -1,5 +1,6 @@
 #ifndef STRING_TOKEN_H
 #define STRING_TOKEN_H
+#pragma once
 
 #include <iostream>
 #include <string>

@@ -1,5 +1,6 @@
 #ifndef MMAP_H
 #define MMAP_H
+#pragma once
 
 #include "bplustree.h"
 #include "mpair.h"
@@ -128,7 +129,7 @@ public:
         return outs;
     }
     // getters
-    std::vector<K> get_all_keys()
+    std::vector<K> keys()
     {
         std::vector<K> keys;
         keys.clear();
@@ -142,7 +143,7 @@ public:
         }
         return keys;
     }
-    std::vector<V> get_all_values()
+    std::vector<V> values()
     {
         std::vector<V> values;
         values.clear();
