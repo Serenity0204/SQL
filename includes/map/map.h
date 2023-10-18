@@ -1,11 +1,11 @@
 #ifndef MAP_H
 #define MAP_H
+#pragma once
 
 #include "bplustree.h"
 #include "pair.h"
 #include <cstdlib> // Provides std::size_t
 #include <vector>
-using namespace std;
 
 template <typename K, typename V>
 class Map
@@ -92,30 +92,8 @@ public:
         return outs;
     }
     // getters
-    vector<K> get_all_keys()
-    {
-        vector<K> keys;
-        keys.clear();
-        if (this->empty()) return keys;
-        typename Map<K, V>::Iterator it;
-        for (it = this->begin(); it != this->end(); ++it)
-        {
-            K key = (*it).key;
-            keys.push_back(key);
-        }
-        return keys;
-    }
-    vector<V> get_all_values()
-    {
-        vector<V> vals;
-        typename Map<K, V>::Iterator it;
-        for (it = this->begin(); it != this->end(); ++it)
-        {
-            V v = (*it).value;
-            vals += v;
-        }
-        return vals;
-    }
+    std::vector<K> keys();
+    std::vector<V> values();
 
 private:
     BPlusTree<Pair<K, V>> map;
@@ -247,5 +225,33 @@ template <typename K, typename V>
 typename Map<K, V>::Iterator Map<K, V>::upper_bound(const K& key)
 {
     return Iterator(this->map.upper_bound(Pair<K, V>(key)));
+}
+
+template <typename K, typename V>
+std::vector<K> Map<K, V>::keys()
+{
+    std::vector<K> keys;
+    keys.clear();
+    if (this->empty()) return keys;
+    typename Map<K, V>::Iterator it;
+    for (it = this->begin(); it != this->end(); ++it)
+    {
+        K key = (*it).key;
+        keys.push_back(key);
+    }
+    return keys;
+}
+
+template <typename K, typename V>
+std::vector<V> Map<K, V>::values()
+{
+    std::vector<V> vals;
+    typename Map<K, V>::Iterator it;
+    for (it = this->begin(); it != this->end(); ++it)
+    {
+        V v = (*it).value;
+        vals += v;
+    }
+    return vals;
 }
 #endif // MAP_H

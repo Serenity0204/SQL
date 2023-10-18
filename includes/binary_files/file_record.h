@@ -1,5 +1,6 @@
 #ifndef FILE_RECORD_H
 #define FILE_RECORD_H
+#pragma once
 
 #include <cstring>  // strncpy
 #include <fstream>  // fstream
@@ -7,7 +8,6 @@
 #include <iostream> // cout, endl
 #include <memory>
 #include <vector> // vector
-using namespace std;
 
 class FileRecord
 {
@@ -16,13 +16,13 @@ private:
     // The maximum size of the record
     static const int MAX = 100;
     // The record vector
-    vector<string> _records;
+    std::vector<std::string> _records;
 
 public:
     // When construct a FileRecord, it's either empty or it contains a word
     FileRecord() {}
 
-    FileRecord(string s)
+    FileRecord(std::string s)
     {
         this->_records.push_back(s);
     }
@@ -30,16 +30,16 @@ public:
     FileRecord(char s[])
     {
         int len = strlen(s);
-        this->_records.push_back(string(s, len));
+        this->_records.push_back(std::string(s, len));
     }
 
-    FileRecord(vector<string> v)
+    FileRecord(std::vector<std::string> v)
     {
         this->_records = v;
     }
 
     // Returns the record number
-    long write(fstream& outs)
+    long write(std::fstream& outs)
     {
         outs.seekg(0, outs.end);
         long pos = outs.tellp();
@@ -48,7 +48,7 @@ public:
         return pos / (MAX * size);
     }
     // Returns the number of bytes read = MAX, or zero if read passed the end of file
-    long read(fstream& ins, long recno)
+    long read(std::fstream& ins, long recno)
     {
         int size = this->_records.size();
         long pos = recno * MAX * size;
@@ -66,12 +66,12 @@ public:
         return total;
     }
     // Returns the record
-    vector<char*> get_records()
+    std::vector<char*> get_records()
     {
-        vector<char*> res;
+        std::vector<char*> res;
         for (int i = 0; i < this->_records.size(); ++i)
         {
-            string record = this->_records[i];
+            std::string record = this->_records[i];
             char* temp = new char[record.size() + 1];
             strncpy(temp, record.c_str(), record.size());
             temp[record.size()] = '\0';
@@ -79,16 +79,16 @@ public:
         }
         return res;
     }
-    vector<string> get_records_string()
+    std::vector<std::string> get_records_string()
     {
         return this->_records;
     }
     // Overload the << operator to print a FileRecord
-    friend ostream& operator<<(ostream& outs, const FileRecord& r)
+    friend std::ostream& operator<<(std::ostream& outs, const FileRecord& r)
     {
-        for (string _record : r._records)
+        for (std::string _record : r._records)
         {
-            outs << setw(MAX / 4) << right << _record;
+            outs << std::setw(MAX / 4) << std::right << _record;
         }
         return outs;
     }

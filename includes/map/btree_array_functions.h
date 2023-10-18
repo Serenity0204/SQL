@@ -1,12 +1,13 @@
 #ifndef BTREE_ARRAY_FUNCTIONS_H
 #define BTREE_ARRAY_FUNCTIONS_H
+#pragma once
 
 #include <cassert> // Provides assert
 #include <cstdlib> // Provides size_t
 #include <cstring>
 #include <iomanip>  // Provides std::setw
 #include <iostream> // Provides std::cout
-using namespace std;
+
 // Declaration
 
 template <class T>
@@ -219,11 +220,10 @@ void print_array(const T data[], std::size_t n, std::size_t pos)
 {
     if (n == 0)
     {
-        cout << "empty" << endl;
+        std::cout << "empty" << std::endl;
         return;
     }
-    for (size_t i = pos; i < n; ++i)
-        cout << "[" << data[i] << "] ";
+    for (size_t i = pos; i < n; ++i) std::cout << "[" << data[i] << "] ";
 }
 
 #endif // BTREE_ARRAY_FUNCTIONS_H

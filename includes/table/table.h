@@ -1,5 +1,6 @@
 #ifndef TABLE_H
 #define TABLE_H
+#pragma once
 
 #include <cassert>  // assert
 #include <cstring>  // strcmp
@@ -24,16 +25,16 @@ class Table
 {
 private:
     // iterator typedef
-    typedef MMap<string, long>::Iterator mmap_sl_it;
+    typedef MMap<std::string, long>::Iterator mmap_sl_it;
     // title of the table
-    string _table_name;
+    std::string _table_name;
     // fields of the table
-    vector<string> _field_names;
-    vector<string> _selected_field_names;
+    std::vector<std::string> _field_names;
+    std::vector<std::string> _selected_field_names;
     // number of records in the table
     long _n_records;
     // selected records' numbers
-    vector<long> _record_indices;
+    std::vector<long> _record_indices;
     long _total_records;
     // Map<field_name->string, MMap<field_value->string, index->long>>
     // field name: name age gender
@@ -46,20 +47,20 @@ private:
     // gender {Male: 1, 2}
     // first and second entries have the same gender, so we gotta map gender-> Male -> 1st, 2nd entry
 
-    Map<string, MMap<string, long>> _cache;
-    Map<string, long> _field_name_indices; // map field name to entry indices
+    Map<std::string, MMap<std::string, long>> _cache;
+    Map<std::string, long> _field_name_indices; // map field name to entry indices
 
-    vector<string> _to_print;
+    std::vector<std::string> _to_print;
     // helper
     void _init(bool is_new);
     void _index();
-    vector<long> _select_helper(const string& field_name, const string& op, const string& field_value);
+    std::vector<long> _select_helper(const std::string& field_name, const std::string& op, const std::string& field_value);
     void _read_helper(Table& temp);
-    vector<long> _rpn(const Queue<Token*>& postfix);
+    std::vector<long> _rpn(const Queue<Token*>& postfix);
 
-    inline vector<long> _bound_helper(const mmap_sl_it& begin, const mmap_sl_it& end)
+    inline std::vector<long> _bound_helper(const mmap_sl_it& begin, const mmap_sl_it& end)
     {
-        vector<long> res;
+        std::vector<long> res;
         res.clear();
         mmap_sl_it it = begin;
         if (it.is_null()) return res;
@@ -69,24 +70,24 @@ private:
         return res;
     }
 
-    inline void _reorder_fields(const vector<string>& selected_fields, vector<string>& reordered_vec)
+    inline void _reorder_fields(const std::vector<std::string>& selected_fields, std::vector<std::string>& reordered_vec)
     {
-        vector<string> reordered = selected_fields;
+        std::vector<std::string> reordered = selected_fields;
         // search for invalids
-        vector<int> invalid_indices;
+        std::vector<int> invalid_indices;
         for (int i = 0; i < reordered.size(); ++i)
         {
-            string field_name = reordered[i];
+            std::string field_name = reordered[i];
             if (!this->_field_name_indices.contains(field_name)) invalid_indices.push_back(i);
         }
         // erase the invalid indices
         for (auto invalid_i : invalid_indices)
         {
-            vector<string>::iterator it = reordered.begin();
+            std::vector<std::string>::iterator it = reordered.begin();
             reordered.erase(it + invalid_i);
         }
 
-        vector<long> sort_indices;
+        std::vector<long> sort_indices;
         // sort
         for (auto field_name : reordered)
         {
@@ -96,9 +97,9 @@ private:
         Helper::obj_sort(reordered, sort_indices);
         reordered_vec = reordered;
     }
-    inline bool _check_error_fields(const vector<string>& selected_fields)
+    inline bool _check_error_fields(const std::vector<std::string>& selected_fields)
     {
-        set<string> s;
+        std::set<std::string> s;
         // check duplicate
         for (auto field : selected_fields)
         {
@@ -111,41 +112,41 @@ private:
 
 public:
     // TYPEDEFS
-    typedef vector<string> vector_str;
-    typedef vector<long> vector_long;
-    typedef Map<string, long> map_sl;
-    typedef Map<string, string> map_ss;
-    typedef MMap<string, long> mmap_sl;
-    typedef MMap<string, string> mmap_ss;
+    typedef std::vector<std::string> vector_str;
+    typedef std::vector<long> vector_long;
+    typedef Map<std::string, long> map_sl;
+    typedef Map<std::string, std::string> map_ss;
+    typedef MMap<std::string, long> mmap_sl;
+    typedef MMap<std::string, std::string> mmap_ss;
     // CONSTRUCTORS
     Table();
-    Table(const string& table_name);
-    Table(const string& table_name, const vector<string>& field_names);
+    Table(const std::string& table_name);
+    Table(const std::string& table_name, const std::vector<std::string>& field_names);
     Table& operator=(const Table& RHS);
     ~Table() {}
 
     // SQL: CREATE TABLE
-    string create_table(const string& table_name, const vector<string>& field_names);
+    std::string create_table(const std::string& table_name, const std::vector<std::string>& field_names);
 
     // SQL: INSERT INTO
     // string insert_into(const vector<char*>& field_values); ??
-    string insert_into(const vector<string>& field_values);
+    std::string insert_into(const std::vector<std::string>& field_values);
 
     // SQL: SELECT
-    Table select(const vector<string>& selected_fields, const string& field_name, const string& op, const string& field_value);
-    Table select(const vector<string>& selected_fields, const vector<string>& expression = vector<string>());
-    Table select(const vector<string>& selected_fields, const Queue<Token*>& expression);
-    Table select_all(const vector<string>& selected_fields = vector<string>());
+    Table select(const std::vector<std::string>& selected_fields, const std::string& field_name, const std::string& op, const std::string& field_value);
+    Table select(const std::vector<std::string>& selected_fields, const std::vector<std::string>& expression = std::vector<std::string>());
+    Table select(const std::vector<std::string>& selected_fields, const Queue<Token*>& expression);
+    Table select_all(const std::vector<std::string>& selected_fields = std::vector<std::string>());
 
     // Get all selected record numbers
-    inline vector<long> select_recnos() const { return _record_indices; }
+    inline std::vector<long> select_recnos() const { return _record_indices; }
     // Print table
-    friend ostream& operator<<(ostream& outs, const Table& t);
+    friend std::ostream& operator<<(std::ostream& outs, const Table& t);
     // Get the title of the table
-    inline string title() const { return _table_name; }
+    inline std::string title() const { return _table_name; }
     // Get the fields of the table
-    inline vector<string> get_fields() { return this->_selected_field_names; }
-    inline vector<string> get_original_fields() { return this->_field_names; }
+    inline std::vector<std::string> get_fields() { return this->_selected_field_names; }
+    inline std::vector<std::string> get_original_fields() { return this->_field_names; }
     // Get the number of records in the table
     inline long record_count() const { return this->_n_records; }
     inline long total_records() const { return this->_total_records; }

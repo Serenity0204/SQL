@@ -1,5 +1,6 @@
 #ifndef TOKENIZER_CONSTANTS_H
 #define TOKENIZER_CONSTANTS_H
+#pragma once
 
 const int MAX_COLUMNS = 256;
 const int MAX_ROWS = 100;

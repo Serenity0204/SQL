@@ -1,5 +1,6 @@
 #ifndef PARSER_CONST_H
 #define PARSER_CONST_H
+#pragma once
 
 // create table <TABLE_NAME> fields <FIELD_NAME> [, <FIELD_NAME> ...]
 

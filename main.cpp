@@ -8,9 +8,9 @@ int main(int argc, char* argv[])
     {
         std::cout << "Type \"end\" to end, \"prep\" to use prep data, and \"cls\" or \"clear\" to clean the screen" << std::endl;
         std::cout << ">>";
-        string input = "";
-        getline(std::cin, input);
-        std::cout << endl;
+        std::string input = "";
+        std::getline(std::cin, input);
+        std::cout << std::endl;
 
         if (input.empty()) continue;
         if (input == "cls" || input == "clear")

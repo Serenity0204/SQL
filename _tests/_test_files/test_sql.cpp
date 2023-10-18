@@ -143,8 +143,8 @@ includes
 ├── linked_list
 │   ├── linked_list_functions
 │   │   └── linked_list_functions.h
-│   ├── node
-│   │   └── node.h
+│   ├── Node
+│   │   └── Node.h
 │   ├── queue
 │   │   └── MyQueue.h
 │   └── stack

@@ -2,13 +2,13 @@
 
 Parser::Parser()
 {
-    this->_parse_tree = MMap<string, string>();
-    this->_input = vector<SToken>();
-    this->_types = vector<PARSER_CONST>();
+    this->_parse_tree = MMap<std::string, std::string>();
+    this->_input = std::vector<SToken>();
+    this->_types = std::vector<PARSER_CONST>();
     this->_tokenizer = STokenizer();
     this->_init_parse_state();
 }
-Parser::Parser(const string& str)
+Parser::Parser(const std::string& str)
     : Parser()
 {
     this->_tokenizer.set_string(str.c_str());
@@ -24,7 +24,7 @@ void Parser::set_string(const char*& cstr)
     this->_tokenizer.set_string(cstr);
     this->_tokenize();
 }
-void Parser::set_string(const string& str)
+void Parser::set_string(const std::string& str)
 {
     this->_parse_tree.clear();
     this->_types.clear();
@@ -33,7 +33,7 @@ void Parser::set_string(const string& str)
     this->_tokenize();
 }
 // parse string to map
-MMap<string, string> Parser::parse_tree()
+MMap<std::string, std::string> Parser::parse_tree()
 {
     bool success = this->_parse();
     if (!success)
@@ -97,29 +97,29 @@ bool Parser::_parse()
         if (state == 19 && !did_where)
         {
             did_where = true;
-            this->_parse_tree["where"] += string("yes");
+            this->_parse_tree["where"] += std::string("yes");
         }
         if (state >= 19 && state <= 24 && this->_input[i].token_str() != "where") this->_parse_tree["condition"] += this->_input[i].token_str();
     }
     // // return true;
     if (this->_parse_tree["condition"].empty()) this->_parse_tree.erase("condition");
     if (this->_parse_tree["where"].empty()) this->_parse_tree.erase("where");
-    return is_success(this->_table, state);
+    return state_machine::is_success(this->_table, state);
 }
 
 // hard code state machine here
 void Parser::_init_parse_state()
 {
-    init_table(this->_table);
+    state_machine::init_table(this->_table);
     // mark success state
     for (int i = 0; i <= 24; ++i)
     {
         if (i == 5 || i == 11 || i == 18 || i == 23 || i == 24)
         {
-            mark_success(this->_table, i);
+            state_machine::mark_success(this->_table, i);
             continue;
         }
-        mark_fail(this->_table, i);
+        state_machine::mark_fail(this->_table, i);
     }
     // create table <TABLE_NAME> fields <FIELD_NAME> [, <FIELD_NAME> ...]
 
@@ -131,50 +131,50 @@ void Parser::_init_parse_state()
 
     // state 1 to 6 for insert
     // create
-    mark_cell(0, this->_table, CREATE, 1);  // create, failed state
-    mark_cell(1, this->_table, TABLE, 2);   // table, failed state
-    mark_cell(2, this->_table, LITERAL, 3); // table name, failed state
-    mark_cell(3, this->_table, FIELDS, 4);  // fields, failed state
-    mark_cell(4, this->_table, LITERAL, 5); // field name, success state
-    mark_cell(5, this->_table, COMMAS, 6);  // comma, failed state
-    mark_cell(6, this->_table, LITERAL, 5); // if after comma, receive a literal, go back to state 5, success state
+    state_machine::mark_cell(0, this->_table, CREATE, 1);  // create, failed state
+    state_machine::mark_cell(1, this->_table, TABLE, 2);   // table, failed state
+    state_machine::mark_cell(2, this->_table, LITERAL, 3); // table name, failed state
+    state_machine::mark_cell(3, this->_table, FIELDS, 4);  // fields, failed state
+    state_machine::mark_cell(4, this->_table, LITERAL, 5); // field name, success state
+    state_machine::mark_cell(5, this->_table, COMMAS, 6);  // comma, failed state
+    state_machine::mark_cell(6, this->_table, LITERAL, 5); // if after comma, receive a literal, go back to state 5, success state
 
     // state 7 to 12
     // insert
-    mark_cell(0, this->_table, INSERT, 7);    // insert, failed state
-    mark_cell(7, this->_table, INTO, 8);      // into, failed state
-    mark_cell(8, this->_table, LITERAL, 9);   // table name, failed state
-    mark_cell(9, this->_table, VALUES, 10);   // values, failed state
-    mark_cell(10, this->_table, LITERAL, 11); // value, success state
-    mark_cell(11, this->_table, COMMAS, 12);  // comma, failed state
-    mark_cell(12, this->_table, LITERAL, 11); // if after comma, receive a literal, go back to state 11, success state
+    state_machine::mark_cell(0, this->_table, INSERT, 7);    // insert, failed state
+    state_machine::mark_cell(7, this->_table, INTO, 8);      // into, failed state
+    state_machine::mark_cell(8, this->_table, LITERAL, 9);   // table name, failed state
+    state_machine::mark_cell(9, this->_table, VALUES, 10);   // values, failed state
+    state_machine::mark_cell(10, this->_table, LITERAL, 11); // value, success state
+    state_machine::mark_cell(11, this->_table, COMMAS, 12);  // comma, failed state
+    state_machine::mark_cell(12, this->_table, LITERAL, 11); // if after comma, receive a literal, go back to state 11, success state
 
     // select, leave paren issues to shunting yard
-    mark_cell(0, this->_table, SELECT, 13);    // select, failed state
-    mark_cell(13, this->_table, ASTERISK, 16); // *, failed state
-    mark_cell(16, this->_table, FROM, 17);     // select * from, failed
+    state_machine::mark_cell(0, this->_table, SELECT, 13);    // select, failed state
+    state_machine::mark_cell(13, this->_table, ASTERISK, 16); // *, failed state
+    state_machine::mark_cell(16, this->_table, FROM, 17);     // select * from, failed
 
-    mark_cell(13, this->_table, LITERAL, 14); // field name, failed state
-    mark_cell(14, this->_table, COMMAS, 15);  // after field_name a comma, failed state
-    mark_cell(15, this->_table, LITERAL, 14); // after comma a field_name, failed state
-    mark_cell(14, this->_table, FROM, 17);    // select field_name, ... field_name from, failed state
+    state_machine::mark_cell(13, this->_table, LITERAL, 14); // field name, failed state
+    state_machine::mark_cell(14, this->_table, COMMAS, 15);  // after field_name a comma, failed state
+    state_machine::mark_cell(15, this->_table, LITERAL, 14); // after comma a field_name, failed state
+    state_machine::mark_cell(14, this->_table, FROM, 17);    // select field_name, ... field_name from, failed state
 
-    mark_cell(17, this->_table, LITERAL, 18); // table name, success state
+    state_machine::mark_cell(17, this->_table, LITERAL, 18); // table name, success state
 
-    mark_cell(18, this->_table, WHERE, 19);   // where, failed state
-    mark_cell(19, this->_table, LITERAL, 21); // where field_name, failed state
+    state_machine::mark_cell(18, this->_table, WHERE, 19);   // where, failed state
+    state_machine::mark_cell(19, this->_table, LITERAL, 21); // where field_name, failed state
 
-    mark_cell(19, this->_table, PARENS, 20);  // where (, failed state
-    mark_cell(20, this->_table, LITERAL, 21); // where (field_name, failed state
-    mark_cell(20, this->_table, PARENS, 20);  // where ((field_name, failed state
+    state_machine::mark_cell(19, this->_table, PARENS, 20);  // where (, failed state
+    state_machine::mark_cell(20, this->_table, LITERAL, 21); // where (field_name, failed state
+    state_machine::mark_cell(20, this->_table, PARENS, 20);  // where ((field_name, failed state
 
-    mark_cell(21, this->_table, RELATIONAL, 22); // where (field_name =, failed state
-    mark_cell(22, this->_table, LITERAL, 23);    // where field_name = John, success state
+    state_machine::mark_cell(21, this->_table, RELATIONAL, 22); // where (field_name =, failed state
+    state_machine::mark_cell(22, this->_table, LITERAL, 23);    // where field_name = John, success state
 
-    mark_cell(23, this->_table, LOGICAL, 19); // where field_name = John and, failed state
-    mark_cell(23, this->_table, PARENS, 24);  // where (field_name = John), success state
-    mark_cell(24, this->_table, LOGICAL, 19); // where (field_name = John) and , failed state
-    mark_cell(24, this->_table, PARENS, 24);  // where (field_name = John) and , failed state
+    state_machine::mark_cell(23, this->_table, LOGICAL, 19); // where field_name = John and, failed state
+    state_machine::mark_cell(23, this->_table, PARENS, 24);  // where (field_name = John), success state
+    state_machine::mark_cell(24, this->_table, LOGICAL, 19); // where (field_name = John) and , failed state
+    state_machine::mark_cell(24, this->_table, PARENS, 24);  // where (field_name = John) and , failed state
 }
 
 // tokenize string into vector

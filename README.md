@@ -1,8 +1,6 @@
 # SQL
 
-A naive implementation of relational database including a SQL like language for interacting with the database.
-Most of the data structures used in this project are implemented from scratch, with the exception of std::set and std::vector. This
-project supports two modes to interact with the database, the first one is command line mode, the second one is batch mode(read from files, and output to terminal/file). The supported sql like statements include select, insert, and create.
+A relational database system built using C++, complete with a custom SQL-like language, from the ground up. This project involved creating essential data structures, with the exception of utilizing the pre-existing STL library. The system offers dual modes of interaction: a user-friendly command-line mode and a batch mode capable of reading from files and delivering outputs to either the terminal or files. The implemented SQL-like statements encompass crucial functionalities such as select, insert, and create operations.
 
 - create table <TABLE_NAME> fields <FIELD_NAME> [, <FIELD_NAME> ...]
 - make table <TABLE_NAME> fields <FIELD_NAME> [, <FIELD_NAME> ...]

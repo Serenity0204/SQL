@@ -1,29 +1,28 @@
-#ifndef NODE_H 
-#define NODE_H 
+#ifndef NODE_H
+#define NODE_H
+#pragma once
 
-#include <iostream> 
+#include <iostream>
 
-using namespace std;
- 
 template <typename T>
-struct node
+struct Node
 {
 public:
-    node(const T& item = T(), node* next = nullptr);
+    Node(const T& item = T(), Node* next = nullptr);
 
     template <typename U>
-    friend ostream& operator <<(ostream& outs, const node<U> &printMe);
+    friend std::ostream& operator<<(std::ostream& outs, const Node<U>& printMe);
 
     T _item;
-    node* _next;
-    node* _prev;
+    Node* _next;
+    Node* _prev;
 };
 
-// Definition 
+// Definition
 
-// TODO 
+// TODO
 template <typename T>
-node<T>::node(const T& item, node<T>* next)
+Node<T>::Node(const T& item, Node<T>* next)
 {
     this->_item = item;
     this->_next = next;
@@ -31,9 +30,9 @@ node<T>::node(const T& item, node<T>* next)
 }
 
 template <typename U>
-ostream& operator <<(ostream& outs, const node<U> &printMe)
+std::ostream& operator<<(std::ostream& outs, const Node<U>& printMe)
 {
     outs << "<-[" << printMe._item << "]->";
     return outs;
 }
-#endif // NODE_H 
+#endif // NODE_H

@@ -1,5 +1,6 @@
 #ifndef MMAP_H
 #define MMAP_H
+#pragma once
 
 #include "bplustree.h"
 #include "mpair.h"
@@ -128,9 +129,9 @@ public:
         return outs;
     }
     // getters
-    vector<K> get_all_keys()
+    std::vector<K> keys()
     {
-        vector<K> keys;
+        std::vector<K> keys;
         keys.clear();
         if (this->empty()) return keys;
 
@@ -142,16 +143,16 @@ public:
         }
         return keys;
     }
-    vector<V> get_all_values()
+    std::vector<V> values()
     {
-        vector<V> values;
+        std::vector<V> values;
         values.clear();
         if (this->empty()) return values;
 
         typename MMap<K, V>::Iterator it;
         for (it = this->begin(); it != this->end(); ++it)
         {
-            vector<V> vals = (*it).value_list;
+            std::vector<V> vals = (*it).value_list;
             values += vals;
         }
         return values;
@@ -161,11 +162,11 @@ public:
     {
         if (this->empty())
         {
-            cout << "empty map" << endl;
+            std::cout << "empty map" << std::endl;
             return;
         }
         typename MMap<K, V>::Iterator it;
-        for (it = this->begin(); it != this->end(); ++it) cout << setw(10) << (*it).key << " :" << setw(5) << " " << (*it).value_list << endl;
+        for (it = this->begin(); it != this->end(); ++it) std::cout << std::setw(10) << (*it).key << " :" << std::setw(5) << " " << (*it).value_list << std::endl;
     }
 };
 

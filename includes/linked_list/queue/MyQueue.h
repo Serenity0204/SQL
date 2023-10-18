@@ -1,11 +1,10 @@
 #ifndef MYQUEUE_H
 #define MYQUEUE_H
+#pragma once
 
 #include "../linked_list_functions/linked_list_functions.h"
 #include <iomanip>
 #include <iostream>
-
-using namespace std;
 
 template <typename T>
 class Queue
@@ -23,7 +22,7 @@ public:
             this->_ptr = nullptr;
         }
         // Point Iterator to where p is pointing to
-        Iterator(node<T>* p)
+        Iterator(Node<T>* p)
         {
             this->_ptr = p;
         }
@@ -78,7 +77,7 @@ public:
         }
 
     private:
-        node<T>* _ptr; // pointer being encapsulated
+        Node<T>* _ptr; // pointer being encapsulated
     };
 
     // constructor: CTOR
@@ -109,7 +108,7 @@ public:
     T back();
 
     template <typename U>
-    friend ostream& operator<<(ostream& outs, const Queue<U>& printMe);
+    friend std::ostream& operator<<(std::ostream& outs, const Queue<U>& printMe);
     void clear()
     {
         _clear_list<T>(this->_front);
@@ -119,8 +118,8 @@ public:
     }
 
 private:
-    node<T>* _front;
-    node<T>* _rear;
+    Node<T>* _front;
+    Node<T>* _rear;
     int _size;
 };
 
@@ -228,7 +227,7 @@ T Queue<T>::back()
 }
 
 template <typename U>
-ostream& operator<<(ostream& outs, const Queue<U>& printMe)
+std::ostream& operator<<(std::ostream& outs, const Queue<U>& printMe)
 {
     typename Queue<U>::Iterator it;
     if (printMe.empty())
@@ -241,7 +240,7 @@ ostream& operator<<(ostream& outs, const Queue<U>& printMe)
     {
         if (it) outs << "[" << *it << "]->";
     }
-    outs << "|||" << endl;
+    outs << "|||" << std::endl;
     return outs;
 }
 

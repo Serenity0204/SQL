@@ -1,12 +1,11 @@
 #ifndef MYSTACK_H
 #define MYSTACK_H
+#pragma once
 
 #include <iomanip>
 #include <iostream>
 
 #include "../linked_list_functions/linked_list_functions.h"
-
-using namespace std;
 
 template <typename T>
 class Stack
@@ -24,7 +23,7 @@ public:
             this->_ptr = nullptr;
         }
         // Point Iterator to where p is pointing to
-        Iterator(node<T>* p)
+        Iterator(Node<T>* p)
         {
             this->_ptr = p;
         }
@@ -79,7 +78,7 @@ public:
         }
 
     private:
-        node<T>* _ptr; // pointer being encapsulated
+        Node<T>* _ptr; // pointer being encapsulated
     };
 
     // constructor: CTOR
@@ -109,7 +108,7 @@ public:
     T top();
 
     template <typename U>
-    friend ostream& operator<<(ostream& outs, const Stack<U>& printMe);
+    friend std::ostream& operator<<(std::ostream& outs, const Stack<U>& printMe);
     void clear()
     {
         _clear_list<T>(this->_top);
@@ -117,7 +116,7 @@ public:
     }
 
 private:
-    node<T>* _top;
+    Node<T>* _top;
     int _size;
 };
 
@@ -203,7 +202,7 @@ T Stack<T>::top()
 }
 
 template <typename U>
-ostream& operator<<(ostream& outs, const Stack<U>& printMe)
+std::ostream& operator<<(std::ostream& outs, const Stack<U>& printMe)
 {
     typename Stack<U>::Iterator it;
     if (printMe.empty())
@@ -215,7 +214,7 @@ ostream& operator<<(ostream& outs, const Stack<U>& printMe)
     {
         if (it) outs << "[" << *it << "]->";
     }
-    outs << "|||" << endl;
+    outs << "|||" << std::endl;
     return outs;
 }
 

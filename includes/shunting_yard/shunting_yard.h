@@ -1,5 +1,6 @@
 #ifndef SHUNTING_YARD_H
 #define SHUNTING_YARD_H
+#pragma once
 
 #include <cassert>
 #include <iostream>
@@ -8,8 +9,6 @@
 #include "../linked_list/stack/MyStack.h"
 
 #include "../token/token_includes.h"
-
-using namespace std;
 
 class ShuntingYard
 {

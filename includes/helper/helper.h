@@ -1,5 +1,6 @@
 #ifndef HELPER_H
 #define HELPER_H
+#pragma once
 
 #include "../linked_list/queue/MyQueue.h"
 #include "../token/token_includes.h"
@@ -11,12 +12,11 @@
 #include <string>
 #include <utility>
 #include <vector>
-using namespace std;
 
 namespace Helper
 {
     template <class T>
-    inline bool is_in(const vector<T>& vec, const T& target)
+    inline bool is_in(const std::vector<T>& vec, const T& target)
     {
         for (int i = 0; i < vec.size(); ++i)
             if (vec[i] == target) return true;
@@ -27,7 +27,7 @@ namespace Helper
     {
         return a.second < b.second;
     }
-    inline void obj_sort(vector<string>& vec1, vector<long>& vec2)
+    inline void obj_sort(std::vector<std::string>& vec1, std::vector<long>& vec2)
     {
         if (vec1.size() != vec2.size()) return;
 
@@ -46,19 +46,19 @@ namespace Helper
             vec2.push_back(p.second);
         }
     }
-    inline vector<long> set_union(vector<long>& v1, vector<long>& v2)
+    inline std::vector<long> set_union(std::vector<long>& v1, std::vector<long>& v2)
     {
-        vector<long> res;
-        set<long> s;
+        std::vector<long> res;
+        std::set<long> s;
         for (auto i : v1) s.insert(i);
         for (auto i : v2) s.insert(i);
         for (auto i : s) res.push_back(i);
         return res;
     }
-    inline vector<long> set_intersection(vector<long>& v1, vector<long>& v2)
+    inline std::vector<long> set_intersection(std::vector<long>& v1, std::vector<long>& v2)
     {
-        vector<long> res;
-        map<long, int> m;
+        std::vector<long> res;
+        std::map<long, int> m;
         for (auto i : v1)
         {
             if (!m.count(i))
@@ -82,9 +82,9 @@ namespace Helper
 
         return res;
     }
-    inline void generate_tokens(const vector<string>& input, Queue<Token*>& infix)
+    inline void generate_tokens(const std::vector<std::string>& input, Queue<Token*>& infix)
     {
-        for (const auto& tk : input)
+        for (const std::string& tk : input)
         {
             if (tk == ">=" || tk == "<=" || tk == ">" || tk == "<" || tk == "=" || tk == "!=" || tk == "LIKE")
             {
