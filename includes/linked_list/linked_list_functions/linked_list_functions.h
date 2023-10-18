@@ -5,8 +5,6 @@
 
 #include "../node/node.h"
 
-using namespace std;
-
 // Declaration
 // Linked List General Functions:
 template <typename T>
@@ -73,10 +71,10 @@ void _print_list(node<T>* head)
     node<T>* walker = head;
     while (walker != nullptr)
     {
-        cout << *walker;
+        std::cout << *walker;
         walker = walker->_next;
     }
-    cout << "|||" << endl;
+    std::cout << "|||" << std::endl;
 }
 
 // recursive fun! :)
@@ -85,12 +83,12 @@ void _print_list_backwards(node<T>* head)
 {
     if (head == nullptr)
     {
-        cout << "|||";
+        std::cout << "|||";
         return;
     }
 
     _print_list_backwards(head->_next);
-    cout << *head;
+    std::cout << *head;
 }
 
 // return ptr to key or NULL

@@ -2,13 +2,13 @@
 
 Parser::Parser()
 {
-    this->_parse_tree = MMap<string, string>();
-    this->_input = vector<SToken>();
-    this->_types = vector<PARSER_CONST>();
+    this->_parse_tree = MMap<std::string, std::string>();
+    this->_input = std::vector<SToken>();
+    this->_types = std::vector<PARSER_CONST>();
     this->_tokenizer = STokenizer();
     this->_init_parse_state();
 }
-Parser::Parser(const string& str)
+Parser::Parser(const std::string& str)
     : Parser()
 {
     this->_tokenizer.set_string(str.c_str());
@@ -24,7 +24,7 @@ void Parser::set_string(const char*& cstr)
     this->_tokenizer.set_string(cstr);
     this->_tokenize();
 }
-void Parser::set_string(const string& str)
+void Parser::set_string(const std::string& str)
 {
     this->_parse_tree.clear();
     this->_types.clear();
@@ -33,7 +33,7 @@ void Parser::set_string(const string& str)
     this->_tokenize();
 }
 // parse string to map
-MMap<string, string> Parser::parse_tree()
+MMap<std::string, std::string> Parser::parse_tree()
 {
     bool success = this->_parse();
     if (!success)
@@ -97,7 +97,7 @@ bool Parser::_parse()
         if (state == 19 && !did_where)
         {
             did_where = true;
-            this->_parse_tree["where"] += string("yes");
+            this->_parse_tree["where"] += std::string("yes");
         }
         if (state >= 19 && state <= 24 && this->_input[i].token_str() != "where") this->_parse_tree["condition"] += this->_input[i].token_str();
     }

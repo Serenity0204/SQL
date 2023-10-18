@@ -9,8 +9,6 @@
 
 #include "../token/token_includes.h"
 
-using namespace std;
-
 class ShuntingYard
 {
 private:

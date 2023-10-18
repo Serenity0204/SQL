@@ -112,7 +112,7 @@ bool STokenizer::get_token(int start_state, SToken& token)
 
     if (state >= 4 && state <= 7)
     {
-        string s = "";
+        std::string s = "";
         s += t;
         token = SToken(s, token_type(state));
         this->_pos++;
@@ -120,7 +120,7 @@ bool STokenizer::get_token(int start_state, SToken& token)
     }
     if (state == -1)
     {
-        string s = "";
+        std::string s = "";
         s += t;
         token = SToken(s, TOKEN_UNKNOWN);
         this->_pos++;
@@ -206,11 +206,11 @@ bool STokenizer::get_token(int start_state, SToken& token)
 
     this->_pos = start;
     STRING_TOKEN_TYPES type = token_type(state);
-    string s = "";
+    std::string s = "";
     for (int i = hold; i < start; ++i) s += this->_buffer[i];
     if (type == TOKEN_QUOTE)
     {
-        string::iterator it = s.begin();
+        std::string::iterator it = s.begin();
         s.erase(it);
         type = TOKEN_ALPHA;
         this->_pos++;

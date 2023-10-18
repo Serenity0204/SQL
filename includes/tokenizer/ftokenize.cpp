@@ -28,10 +28,10 @@ bool FTokenizer::get_new_block() // gets the new block from the file
         _f.read(buffer, MAX_BLOCK - 1);
         buffer[_f.gcount()] = '\0';
         this->_stk.set_string(buffer);
-        cout << "----- New Block -------------------- [" << _f.gcount() << "] bytes" << endl;
+        std::cout << "----- New Block -------------------- [" << _f.gcount() << "] bytes" << std::endl;
         return true;
     }
     this->_f.close();
-    cout << "END OF FILE" << endl;
+    std::cout << "END OF FILE" << std::endl;
     return false;
 }

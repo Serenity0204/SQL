@@ -5,7 +5,6 @@
 #include "pair.h"
 #include <cstdlib> // Provides std::size_t
 #include <vector>
-using namespace std;
 
 template <typename K, typename V>
 class Map
@@ -92,9 +91,9 @@ public:
         return outs;
     }
     // getters
-    vector<K> get_all_keys()
+    std::vector<K> get_all_keys()
     {
-        vector<K> keys;
+        std::vector<K> keys;
         keys.clear();
         if (this->empty()) return keys;
         typename Map<K, V>::Iterator it;
@@ -105,9 +104,9 @@ public:
         }
         return keys;
     }
-    vector<V> get_all_values()
+    std::vector<V> get_all_values()
     {
-        vector<V> vals;
+        std::vector<V> vals;
         typename Map<K, V>::Iterator it;
         for (it = this->begin(); it != this->end(); ++it)
         {

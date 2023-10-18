@@ -6,13 +6,11 @@
 
 #include "constants.h"
 
-using namespace std;
-
 class SToken
 {
 private:
     // the token string
-    string _token;
+    std::string _token;
     // the type of the token
     STRING_TOKEN_TYPES _type;
 
@@ -25,16 +23,16 @@ public:
         : _token(""), _type(TOKEN_UNKNOWN)
     {
     }
-    SToken(string str, STRING_TOKEN_TYPES type)
+    SToken(std::string str, STRING_TOKEN_TYPES type)
         : _token(str), _type(type)
     {
     }
     // return the type of the token
     STRING_TOKEN_TYPES type() const { return _type; }
     // return the token string
-    string token_str() const { return _token; }
+    std::string token_str() const { return _token; }
     // return the type of the token as a string
-    string token_type() const
+    std::string token_type() const
     {
         if (this->_type == TOKEN_ALPHA) return "ALPHA";
         if (this->_type == TOKEN_NUMBER) return "NUMBER";
@@ -46,7 +44,7 @@ public:
         return "UNKNOWN";
     }
     // overload the << operator
-    friend ostream& operator<<(ostream& outs, const SToken& t)
+    friend std::ostream& operator<<(std::ostream& outs, const SToken& t)
     {
         outs << "|" << t.token_str() << '|';
         return outs;

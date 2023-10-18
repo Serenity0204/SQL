@@ -5,20 +5,20 @@
 class Logical : public Token
 {
 private:
-    string _str;
+    std::string _str;
 
 public:
     Logical()
     {
         this->_str = "";
     }
-    Logical(const string& input)
+    Logical(const std::string& input)
     {
         this->_str = input;
     }
     ~Logical() {}
     TOKEN_TYPE_PTR token_type() const override { return TOKEN_LOGICAL; }
-    string token_string() const override { return this->_str; }
+    std::string token_string() const override { return this->_str; }
     int precedence() const override
     {
         if (this->_str == "not") return 3;
@@ -26,13 +26,13 @@ public:
         if (this->_str == "or") return 1;
         return -1;
     }
-    void print(ostream& outs) const override { outs << this->_str; }
-    friend ostream& operator<<(ostream& outs, const Logical& token)
+    void print(std::ostream& outs) const override { outs << this->_str; }
+    friend std::ostream& operator<<(std::ostream& outs, const Logical& token)
     {
         token.print(outs);
         return outs;
     }
-    friend ostream& operator<<(ostream& outs, const Logical* token)
+    friend std::ostream& operator<<(std::ostream& outs, const Logical* token)
     {
         token->print(outs);
         return outs;

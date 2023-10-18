@@ -56,9 +56,9 @@ void print_table(int _table[][MAX_COLUMNS])
 {
     for (int i = 0; i < MAX_ROWS; ++i)
     {
-        for (int j = 0; j < MAX_COLUMNS; ++j) cout << _table[i][j] << " ";
-        cout << endl;
-        cout << endl;
+        for (int j = 0; j < MAX_COLUMNS; ++j) std::cout << _table[i][j] << " ";
+        std::cout << std::endl;
+        std::cout << std::endl;
     }
 }
 
@@ -67,9 +67,9 @@ void print_table(int _table[][MAX_COLUMNS])
 //        ^
 void show_string(char s[], int _pos)
 {
-    cout << s << endl;
-    string space = "";
+    std::cout << s << std::endl;
+    std::string space = "";
     for (int i = 0; i < _pos - 1; ++i) space += " ";
     space += "^";
-    cout << space << endl;
+    std::cout << space << std::endl;
 }

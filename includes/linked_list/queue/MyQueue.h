@@ -5,8 +5,6 @@
 #include <iomanip>
 #include <iostream>
 
-using namespace std;
-
 template <typename T>
 class Queue
 {
@@ -109,7 +107,7 @@ public:
     T back();
 
     template <typename U>
-    friend ostream& operator<<(ostream& outs, const Queue<U>& printMe);
+    friend std::ostream& operator<<(std::ostream& outs, const Queue<U>& printMe);
     void clear()
     {
         _clear_list<T>(this->_front);
@@ -228,7 +226,7 @@ T Queue<T>::back()
 }
 
 template <typename U>
-ostream& operator<<(ostream& outs, const Queue<U>& printMe)
+std::ostream& operator<<(std::ostream& outs, const Queue<U>& printMe)
 {
     typename Queue<U>::Iterator it;
     if (printMe.empty())
@@ -241,7 +239,7 @@ ostream& operator<<(ostream& outs, const Queue<U>& printMe)
     {
         if (it) outs << "[" << *it << "]->";
     }
-    outs << "|||" << endl;
+    outs << "|||" << std::endl;
     return outs;
 }
 

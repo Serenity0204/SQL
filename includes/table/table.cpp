@@ -3,31 +3,31 @@
 // for select
 Table::Table()
 {
-    this->_cache = Map<string, MMap<string, long>>();
-    this->_field_name_indices = Map<string, long>();
-    this->_field_names = vector<string>();
-    this->_selected_field_names = vector<string>();
-    this->_record_indices = vector<long>();
-    this->_to_print = vector<string>();
+    this->_cache = Map<std::string, MMap<std::string, long>>();
+    this->_field_name_indices = Map<std::string, long>();
+    this->_field_names = std::vector<std::string>();
+    this->_selected_field_names = std::vector<std::string>();
+    this->_record_indices = std::vector<long>();
+    this->_to_print = std::vector<std::string>();
     this->_n_records = 0;
     this->_table_name = "";
     this->_total_records = 0;
 }
 
 // SQL: CREATE TABLE
-string Table::create_table(const string& table_name, const vector<string>& field_names)
+std::string Table::create_table(const std::string& table_name, const std::vector<std::string>& field_names)
 {
     *this = Table(table_name, field_names);
     return "create " + table_name + " success";
 }
 
 // for create
-Table::Table(const string& table_name, const vector<string>& field_names)
+Table::Table(const std::string& table_name, const std::vector<std::string>& field_names)
     : Table()
 {
     // if no file exists, create one, if already exists, do nothing
-    string table_file = table_name + ".bin";
-    string field_file = table_name + "_fields.bin";
+    std::string table_file = table_name + ".bin";
+    std::string field_file = table_name + "_fields.bin";
     this->_table_name = table_name;
     this->_field_names = field_names;
     this->_selected_field_names = field_names;
@@ -41,11 +41,11 @@ Table::Table(const string& table_name, const vector<string>& field_names)
 }
 
 // for existing table
-Table::Table(const string& table_name)
+Table::Table(const std::string& table_name)
     : Table()
 {
-    string table_file = table_name + ".bin";
-    string field_file = table_name + "_fields.bin";
+    std::string table_file = table_name + ".bin";
+    std::string field_file = table_name + "_fields.bin";
     this->_table_name = table_name;
     if (!file_exists(table_file.c_str()) || !file_exists(field_file.c_str())) return;
     this->_init(false);
@@ -67,14 +67,14 @@ Table& Table::operator=(const Table& RHS)
 }
 
 // insert
-string Table::insert_into(const vector<string>& field_values)
+std::string Table::insert_into(const std::vector<std::string>& field_values)
 {
     // invalid number of field_values
     if (field_values.size() != this->_field_names.size()) return "Invalid number of arguments";
 
     // insert data into binary file
-    fstream f;
-    string table_file = this->_table_name + ".bin";
+    std::fstream f;
+    std::string table_file = this->_table_name + ".bin";
     open_fileRW(f, table_file.c_str());
     // write it into disk first, then put it into cache
     FileRecord r(field_values);
@@ -85,7 +85,7 @@ string Table::insert_into(const vector<string>& field_values)
     for (int i = 0; i < field_values.size(); ++i)
     {
         // field_names[i]-> field_name, cache[field_name] -> MMap<field_value:index>
-        string field_value = field_values[i];
+        std::string field_value = field_values[i];
         // MMap.insert(field_value, index), like Map["name"].insert("John", 0)
         this->_cache[this->_field_names[i]].insert(field_value, index);
     }
@@ -101,24 +101,24 @@ string Table::insert_into(const vector<string>& field_values)
 }
 
 // print
-ostream& operator<<(ostream& outs, const Table& print_me)
+std::ostream& operator<<(std::ostream& outs, const Table& print_me)
 {
     // for field names
-    outs << setw(25) << right << "record";
-    for (int i = 0; i < print_me._field_names.size(); ++i) outs << setw(25) << right << print_me._field_names[i];
+    outs << std::setw(25) << std::right << "record";
+    for (int i = 0; i < print_me._field_names.size(); ++i) outs << std::setw(25) << std::right << print_me._field_names[i];
 
     // for field values
     int endl_index = print_me._field_names.size();
     for (int i = 0; i < print_me._to_print.size(); ++i)
     {
-        string field_value = print_me._to_print[i];
+        std::string field_value = print_me._to_print[i];
         if (i % endl_index == 0)
         {
-            outs << endl;
-            outs << endl;
-            outs << setw(25) << right << i / endl_index;
+            outs << std::endl;
+            outs << std::endl;
+            outs << std::setw(25) << std::right << i / endl_index;
         }
-        outs << setw(25) << right << field_value;
+        outs << std::setw(25) << std::right << field_value;
     }
     return outs;
 }
@@ -128,15 +128,15 @@ void Table::_init(bool is_new)
 {
     if (is_new)
     {
-        fstream f;
-        string table_file = this->_table_name + ".bin";
-        string field_file = this->_table_name + "_fields.bin";
+        std::fstream f;
+        std::string table_file = this->_table_name + ".bin";
+        std::string field_file = this->_table_name + "_fields.bin";
 
         // record the number of fields
         open_fileW(f, field_file.c_str());
-        vector<string> mark;
+        std::vector<std::string> mark;
         int size = this->_field_names.size();
-        string mark_size = to_string(size);
+        std::string mark_size = std::to_string(size);
         mark.push_back(mark_size);
         for (int i = 0; i < this->_field_names.size(); ++i) mark.push_back(this->_field_names[i]);
         FileRecord r(mark);
@@ -149,10 +149,10 @@ void Table::_init(bool is_new)
     }
     if (!is_new)
     {
-        fstream f;
+        std::fstream f;
         FileRecord r;
-        string table_file = this->_table_name + ".bin";
-        string field_file = this->_table_name + "_fields.bin";
+        std::string table_file = this->_table_name + ".bin";
+        std::string field_file = this->_table_name + "_fields.bin";
 
         // determine the fields
         open_fileRW(f, field_file.c_str());
@@ -164,8 +164,8 @@ void Table::_init(bool is_new)
 
         // read the field names
         r.read(f, 0);
-        vector<string> field_names = r.get_records_string();
-        vector<string>::iterator it = field_names.begin();
+        std::vector<std::string> field_names = r.get_records_string();
+        std::vector<std::string>::iterator it = field_names.begin();
         // exclude the size mark
         field_names.erase(it);
 
@@ -179,17 +179,17 @@ void Table::_init(bool is_new)
         this->_field_name_indices[this->_field_names[i]] = i;
     // for cache;
     for (int i = 0; i < this->_field_names.size(); ++i)
-        this->_cache[this->_field_names[i]] = MMap<string, long>();
+        this->_cache[this->_field_names[i]] = MMap<std::string, long>();
 }
 
 void Table::_index()
 {
     // load field values into cache
-    fstream f;
+    std::fstream f;
     FileRecord r;
     // resize the vector
     r.resize(this->_field_names.size());
-    string table_file = this->_table_name + ".bin";
+    std::string table_file = this->_table_name + ".bin";
     open_fileRW(f, table_file.c_str());
 
     // read every record
@@ -199,12 +199,12 @@ void Table::_index()
         long bytes = r.read(f, i);
         if (bytes == 0) break;
         // put the ith_entry into cache
-        vector<string> ith_entry = r.get_records_string();
+        std::vector<std::string> ith_entry = r.get_records_string();
         for (int ith_entry_walker = 0; ith_entry_walker < ith_entry.size(); ++ith_entry_walker)
         {
             // this->_field_names[ith_entry_walker] -> stuff like "name"
             // cache[name] -> MMap<field value: indices> like <"John", 0>
-            string field_value = ith_entry[ith_entry_walker];
+            std::string field_value = ith_entry[ith_entry_walker];
             // assign index to be the read entry index
             long index = i;
             // ex: assign like cache["name"]["John"] += 1
@@ -219,7 +219,7 @@ void Table::_index()
     f.close();
 }
 
-Table Table::select_all(const vector<string>& selected_fields)
+Table Table::select_all(const std::vector<std::string>& selected_fields)
 {
     const bool debug = false;
 
@@ -233,11 +233,11 @@ Table Table::select_all(const vector<string>& selected_fields)
     // if there's an error
     if (!this->_check_error_fields(selected_fields))
     {
-        if (debug) cout << "error fields" << endl;
+        if (debug) std::cout << "error fields" << std::endl;
         return temp;
     }
     // reorder the selected fields
-    vector<string> reordered;
+    std::vector<std::string> reordered;
     this->_reorder_fields(selected_fields, reordered);
     // copy members
     temp._table_name = this->_table_name;
@@ -252,14 +252,14 @@ Table Table::select_all(const vector<string>& selected_fields)
     temp._selected_field_names = selected_fields;
     // get the indices that need to read, no need to copy cache since all the indices are already stored
     this->_read_helper(temp);
-    if (debug) cout << temp << endl;
+    if (debug) std::cout << temp << std::endl;
     return temp;
 }
 
 void Table::_read_helper(Table& temp)
 {
-    fstream f;
-    string table_file = temp._table_name + ".bin";
+    std::fstream f;
+    std::string table_file = temp._table_name + ".bin";
     open_fileRW(f, table_file.c_str());
     for (auto idx : temp._record_indices)
     {
@@ -268,15 +268,15 @@ void Table::_read_helper(Table& temp)
         long byte = r.read(f, idx);
 
         if (byte == 0) break;
-        vector<string> entry = r.get_records_string();
+        std::vector<std::string> entry = r.get_records_string();
         for (int i = 0; i < entry.size(); ++i)
             if (Helper::is_in(temp._field_names, this->_field_names[i])) temp._to_print += entry[i];
     }
     f.close();
 }
-vector<long> Table::_select_helper(const string& field_name, const string& op, const string& field_value)
+std::vector<long> Table::_select_helper(const std::string& field_name, const std::string& op, const std::string& field_value)
 {
-    if (!this->_cache.contains(field_name)) return vector<long>();
+    if (!this->_cache.contains(field_name)) return std::vector<long>();
     // cout << "op:" << op << endl;
     // this->_cache[field_name] gives you MMap, use that MMap[field_value] to get the indices
     if (op == "=" && this->_cache[field_name].contains(field_value)) return this->_cache[field_name][field_value];
@@ -287,8 +287,8 @@ vector<long> Table::_select_helper(const string& field_name, const string& op, c
     // !=, LIKE for todo
     if (op == "!=")
     {
-        vector<long> res;
-        typename MMap<string, long>::Iterator it;
+        std::vector<long> res;
+        typename MMap<std::string, long>::Iterator it;
         for (it = this->_cache[field_name].begin(); it != this->_cache[field_name].end(); ++it)
         {
             // cout << (*it).key << "?" << field_name << endl;
@@ -299,24 +299,24 @@ vector<long> Table::_select_helper(const string& field_name, const string& op, c
     }
     if (op == "LIKE")
     {
-        vector<long> res;
+        std::vector<long> res;
         Trie trie;
-        set<string> keys;
-        typename MMap<string, long>::Iterator it;
+        std::set<std::string> keys;
+        typename MMap<std::string, long>::Iterator it;
         for (it = this->_cache[field_name].begin(); it != this->_cache[field_name].end(); ++it) trie.insert((*it).key);
-        vector<string> prefix = trie.get_prefix(field_value);
+        std::vector<std::string> prefix = trie.get_prefix(field_value);
         for (it = this->_cache[field_name].begin(); it != this->_cache[field_name].end(); ++it)
         {
-            string key = (*it).key;
+            std::string key = (*it).key;
             if (Helper::is_in(prefix, key)) res += (*it).value_list;
         }
         return res;
     }
     // invalid
-    return vector<long>();
+    return std::vector<long>();
 }
 
-Table Table::select(const vector<string>& selected_fields, const string& field_name, const string& op, const string& field_value)
+Table Table::select(const std::vector<std::string>& selected_fields, const std::string& field_name, const std::string& op, const std::string& field_value)
 {
     const bool debug = false;
     Table temp;
@@ -343,8 +343,8 @@ Table Table::select(const vector<string>& selected_fields, const string& field_n
     if (!Helper::is_in(this->_field_names, field_name)) return temp;
 
     // reorder the selected fields
-    vector<string> reordered;
-    vector<string> selected_temp = this->_selected_field_names;
+    std::vector<std::string> reordered;
+    std::vector<std::string> selected_temp = this->_selected_field_names;
     this->_reorder_fields(selected_temp, reordered);
     // copy members
     temp._table_name = this->_table_name;
@@ -360,14 +360,14 @@ Table Table::select(const vector<string>& selected_fields, const string& field_n
     this->_record_indices = temp._record_indices;
     this->_n_records = temp._n_records;
 
-    if (debug) cout << "n records self:" << this->_n_records << endl;
-    if (debug) cout << "n records temp:" << temp._n_records << endl;
+    if (debug) std::cout << "n records self:" << this->_n_records << std::endl;
+    if (debug) std::cout << "n records temp:" << temp._n_records << std::endl;
 
     return temp;
 }
 
 // accumulate version of select
-Table Table::select(const vector<string>& selected_fields, const vector<string>& expression)
+Table Table::select(const std::vector<std::string>& selected_fields, const std::vector<std::string>& expression)
 {
     const bool debug = false;
     Queue<Token*> infix;
@@ -375,7 +375,7 @@ Table Table::select(const vector<string>& selected_fields, const vector<string>&
 
     ShuntingYard sy(infix);
     Queue<Token*> postfix = sy.postfix();
-    if (debug) cout << "postfix:" << postfix << endl;
+    if (debug) std::cout << "postfix:" << postfix << std::endl;
     Table temp = this->select(selected_fields, postfix);
 
     if (!infix.empty())
@@ -409,7 +409,7 @@ Table Table::select(const vector<string>& selected_fields, const vector<string>&
     return temp;
 }
 
-Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& expression)
+Table Table::select(const std::vector<std::string>& selected_fields, const Queue<Token*>& expression)
 {
     const bool debug = false;
     Table temp;
@@ -425,9 +425,9 @@ Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& 
         temp._selected_field_names = this->get_original_fields();
         if (debug)
         {
-            cout << endl;
-            cout << "self changed to:" << this->_selected_field_names << endl;
-            cout << "temp changed to:" << temp._selected_field_names << endl;
+            std::cout << std::endl;
+            std::cout << "self changed to:" << this->_selected_field_names << std::endl;
+            std::cout << "temp changed to:" << temp._selected_field_names << std::endl;
         }
         changed_fields = true;
     }
@@ -440,14 +440,14 @@ Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& 
     if (!changed_fields && !this->_check_error_fields(selected_fields)) return temp;
 
     // reorder the selected fields
-    vector<string> reordered;
-    vector<string> selected_temp = this->_selected_field_names;
+    std::vector<std::string> reordered;
+    std::vector<std::string> selected_temp = this->_selected_field_names;
     this->_reorder_fields(selected_temp, reordered);
     // copy members
     temp._table_name = this->_table_name;
     temp._field_names = reordered;
     // assign the indices
-    if (debug) cout << "indices:" << this->_rpn(expression) << endl;
+    if (debug) std::cout << "indices:" << this->_rpn(expression) << std::endl;
     if (!expression.empty()) temp._record_indices = this->_rpn(expression);
     if (expression.empty())
     {
@@ -455,7 +455,7 @@ Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& 
         return temp;
     }
     temp._n_records = temp._record_indices.size();
-    if (debug) cout << "n records temp:" << temp._n_records << endl;
+    if (debug) std::cout << "n records temp:" << temp._n_records << std::endl;
 
     // read the entries
     this->_read_helper(temp);
@@ -463,18 +463,18 @@ Table Table::select(const vector<string>& selected_fields, const Queue<Token*>& 
     // assign new record indices
     this->_record_indices = temp._record_indices;
     this->_n_records = temp._n_records;
-    if (debug) cout << "n records self:" << this->_n_records << endl;
+    if (debug) std::cout << "n records self:" << this->_n_records << std::endl;
 
     return temp;
 }
 
-vector<long> Table::_rpn(const Queue<Token*>& postfix)
+std::vector<long> Table::_rpn(const Queue<Token*>& postfix)
 {
     const bool debug = false;
     Stack<Token*> s;
     Queue<Token*> q = postfix;
-    Stack<vector<long>> indices;
-    if (debug) cout << q << endl;
+    Stack<std::vector<long>> indices;
+    if (debug) std::cout << q << std::endl;
 
     while (!q.empty())
     {
@@ -487,12 +487,12 @@ vector<long> Table::_rpn(const Queue<Token*>& postfix)
         // if relational select from cache
         if (token->token_type() == TOKEN_RELATIONAL)
         {
-            string relational_op = token->token_string();
-            string field_value = s.pop()->token_string(); // field_value first
-            string field_name = s.pop()->token_string();  // field_name second
-            vector<long> selected_indices = this->_select_helper(field_name, relational_op, field_value);
+            std::string relational_op = token->token_string();
+            std::string field_value = s.pop()->token_string(); // field_value first
+            std::string field_name = s.pop()->token_string();  // field_name second
+            std::vector<long> selected_indices = this->_select_helper(field_name, relational_op, field_value);
             // cout << "indices:" << selected_indices << endl;
-            if (debug) cout << field_name << relational_op << field_value << " brings:" << selected_indices << endl;
+            if (debug) std::cout << field_name << relational_op << field_value << " brings:" << selected_indices << std::endl;
             indices.push(selected_indices);
             // age, 20, <=
             // s: 20
@@ -502,23 +502,23 @@ vector<long> Table::_rpn(const Queue<Token*>& postfix)
         if (token->token_type() == TOKEN_LOGICAL)
         {
             // do set operation
-            vector<long> first = indices.pop();
-            vector<long> second = indices.pop();
+            std::vector<long> first = indices.pop();
+            std::vector<long> second = indices.pop();
 
-            vector<long> temp;
+            std::vector<long> temp;
             temp.clear();
 
             // if and then do intersection of two indices
             if (token->token_string() == "and")
             {
                 temp = Helper::set_intersection(first, second);
-                if (debug) cout << "first:" << first << " and second:" << second << " brings:" << temp << endl;
+                if (debug) std::cout << "first:" << first << " and second:" << second << " brings:" << temp << std::endl;
             }
             // then do union
             if (token->token_string() == "or")
             {
                 temp = Helper::set_union(first, second);
-                if (debug) cout << "first:" << first << " or second:" << second << " brings:" << temp << endl;
+                if (debug) std::cout << "first:" << first << " or second:" << second << " brings:" << temp << std::endl;
             }
             indices.push(temp);
         }
@@ -526,14 +526,14 @@ vector<long> Table::_rpn(const Queue<Token*>& postfix)
     // rpn error
     if (indices.size() != 1)
     {
-        if (debug) cout << "rpn error" << endl;
-        if (debug) cout << indices << endl;
-        return vector<long>();
+        if (debug) std::cout << "rpn error" << std::endl;
+        if (debug) std::cout << indices << std::endl;
+        return std::vector<long>();
     }
     if (debug)
     {
-        cout << "indices:" << endl;
-        cout << indices.top() << endl;
+        std::cout << "indices:" << std::endl;
+        std::cout << indices.top() << std::endl;
     }
     return indices.top();
 }

@@ -1,10 +1,8 @@
-#ifndef NODE_H 
-#define NODE_H 
+#ifndef NODE_H
+#define NODE_H
 
-#include <iostream> 
+#include <iostream>
 
-using namespace std;
- 
 template <typename T>
 struct node
 {
@@ -12,16 +10,16 @@ public:
     node(const T& item = T(), node* next = nullptr);
 
     template <typename U>
-    friend ostream& operator <<(ostream& outs, const node<U> &printMe);
+    friend std::ostream& operator<<(std::ostream& outs, const node<U>& printMe);
 
     T _item;
     node* _next;
     node* _prev;
 };
 
-// Definition 
+// Definition
 
-// TODO 
+// TODO
 template <typename T>
 node<T>::node(const T& item, node<T>* next)
 {
@@ -31,9 +29,9 @@ node<T>::node(const T& item, node<T>* next)
 }
 
 template <typename U>
-ostream& operator <<(ostream& outs, const node<U> &printMe)
+std::ostream& operator<<(std::ostream& outs, const node<U>& printMe)
 {
     outs << "<-[" << printMe._item << "]->";
     return outs;
 }
-#endif // NODE_H 
+#endif // NODE_H

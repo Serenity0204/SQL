@@ -8,7 +8,6 @@
 #include <string>   // Provides std::to_string
 
 #include "btree_array_functions.h" // Include the implementation.
-using namespace std;
 
 template <class Item>
 class BPlusTree
@@ -80,7 +79,7 @@ public:
                 print_array(this->it->data, this->it->data_count);
                 return;
             }
-            cout << "nullptr iterator" << endl;
+            std::cout << "nullptr iterator" << std::endl;
         }
 
     private:
@@ -216,7 +215,7 @@ BPlusTree<Item>& BPlusTree<Item>::operator=(const BPlusTree<Item>& source)
 template <class Item>
 std::size_t BPlusTree<Item>::size()
 {
-    if(this->empty()) return 0;
+    if (this->empty()) return 0;
     typename BPlusTree<Item>::Iterator it = this->begin();
     size_t count = 0;
     for (it = this->begin(); it != this->end(); ++it) count++;
@@ -298,12 +297,12 @@ void BPlusTree<Item>::print(int indent, std::ostream& outs) const
         if (i < this->data_count)
         {
             if (i == this->data_count - 1 && this->next != nullptr)
-                outs << string(4 * indent, ' ') << "^" << endl;
+                outs << std::string(4 * indent, ' ') << "^" << std::endl;
             if (i == this->data_count - 1)
-                outs << string(4 * indent, ' ') << down_bracket << endl; // ⎴
-            outs << string(4 * indent, ' ') << this->data[i] << endl;
-            if (i == 0)
-                outs << string(4 * indent, ' ') << up_bracket << endl; // ⎵
+                outs << std::string(4 * indent, ' ') << down_bracket << std::endl; // ⎴
+
+            outs << std::string(4 * indent, ' ') << this->data[i] << std::endl;
+            if (i == 0) outs << std::string(4 * indent, ' ') << up_bracket << std::endl; // ⎵
         }
 
         if (!this->is_leaf())
@@ -472,13 +471,13 @@ bool BPlusTree<Item>::is_valid() const
     // check if the node has too many entries
     if (data_count > MAXIMUM || data_count < MINIMUM)
     {
-        cout << "node has too many entries" << endl;
+        std::cout << "node has too many entries" << std::endl;
         return false;
     }
     // check if the node has too many children
     if (child_count > MAXIMUM + 1 || child_count < 0)
     {
-        cout << "node has too many children" << endl;
+        std::cout << "node has too many children" << std::endl;
         return false;
     }
     // check if the data is sorted
@@ -486,7 +485,7 @@ bool BPlusTree<Item>::is_valid() const
     {
         if (data[i] > data[i + 1])
         {
-            cout << "node has too many children" << endl;
+            std::cout << "node has too many children" << std::endl;
             return false;
         }
     }
@@ -495,11 +494,11 @@ bool BPlusTree<Item>::is_valid() const
         // check if the child_count is not equal to data_count+1
         if (child_count != data_count + 1)
         {
-            cout << "child count:" << child_count << endl;
-            cout << "data count:" << data_count << endl;
-            cout << "at this level:" << endl;
+            std::cout << "child count:" << child_count << std::endl;
+            std::cout << "data count:" << data_count << std::endl;
+            std::cout << "at this level:" << std::endl;
             print_array(this->data, this->data_count);
-            cout << "child_count is not equal to data_count+1" << endl;
+            std::cout << "child_count is not equal to data_count+1" << std::endl;
             return false;
         }
         // check if data is in range of children
@@ -509,28 +508,28 @@ bool BPlusTree<Item>::is_valid() const
             valid = is_gt(subset[i]->data, subset[i]->data_count, data[i]);
             if (!valid)
             {
-                cout << "data[i] is not greater than subset[i]" << endl;
+                std::cout << "data[i] is not greater than subset[i]" << std::endl;
                 return false;
             }
             // check if data[i] is less than subset[i+1]
             valid = is_le(subset[i + 1]->data, subset[i + 1]->data_count, data[i]);
             if (!valid)
             {
-                cout << "if data[i] is not less than subset[i+1]]" << endl;
+                std::cout << "if data[i] is not less than subset[i+1]]" << std::endl;
                 return false;
             }
             // check if subset[i] is valid
             valid = subset[i]->is_valid();
             if (!valid)
             {
-                cout << "not valid" << endl;
+                std::cout << "not valid" << std::endl;
                 return false;
             }
             // check if data[i] is the smallest node in subset[i+1]
             valid = data[i] == subset[i + 1]->get_smallest_node()->data[0];
             if (!valid)
             {
-                cout << "smallest wrong" << endl;
+                std::cout << "smallest wrong" << std::endl;
                 return false;
             }
         }
@@ -538,7 +537,7 @@ bool BPlusTree<Item>::is_valid() const
         valid = subset[data_count]->is_valid();
         if (!valid)
         {
-            cout << "child not valid" << endl;
+            std::cout << "child not valid" << std::endl;
             return false;
         }
     }

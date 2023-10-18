@@ -13,7 +13,7 @@ class STokenizer
 {
 private:
     // char _buffer[MAX_BUFFER]; // input string
-    string _buffer;
+    std::string _buffer;
     int _pos; // current position in the string
     int _table[MAX_ROWS][MAX_COLUMNS];
 

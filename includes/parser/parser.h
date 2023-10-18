@@ -18,22 +18,22 @@ public:
     // Constructors
     Parser();
     Parser(const char*& cstr);
-    Parser(const string& str);
+    Parser(const std::string& str);
     // save string to private member
     void set_string(const char*& cstr);
-    void set_string(const string& str);
+    void set_string(const std::string& str);
     // parse string to map
-    MMap<string, string> parse_tree();
-    vector<SToken> get_input() { return this->_input; }
+    MMap<std::string, std::string> parse_tree();
+    std::vector<SToken> get_input() { return this->_input; }
 
     // =====================================
     // TODO: Add more methods here if needed
     // =====================================
 
 private:
-    vector<SToken> _input;
-    vector<PARSER_CONST> _types;
-    MMap<string, string> _parse_tree;
+    std::vector<SToken> _input;
+    std::vector<PARSER_CONST> _types;
+    MMap<std::string, std::string> _parse_tree;
     STokenizer _tokenizer;
     int _table[MAX_ROWS][MAX_COLUMNS];
     // helper

@@ -1,12 +1,11 @@
 #ifndef STATE_MACHINE_FUNCTIONS_H
 #define STATE_MACHINE_FUNCTIONS_H
 
+#include "constants.h"
 #include <cassert>
 #include <cstring>
 #include <iomanip>
 #include <iostream>
-using namespace std;
-#include "constants.h"
 
 // Fill all cells of the array with -1
 void init_table(int _table[][MAX_COLUMNS]);

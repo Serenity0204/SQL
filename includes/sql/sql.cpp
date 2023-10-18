@@ -12,10 +12,10 @@ SQL::SQL(const char* file)
     this->batch(file);
 }
 // Process a command and return the result table
-Table SQL::command(const string& cmd)
+Table SQL::command(const std::string& cmd)
 {
     Table table;
-    string message = "Empty Message to be changed";
+    std::string message = "Empty Message to be changed";
     bool error = false;
     this->_process_cmd(cmd, table, message, error);
     this->_table = table;
@@ -23,12 +23,12 @@ Table SQL::command(const string& cmd)
     return this->_table;
 }
 
-void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& error)
+void SQL::_process_cmd(const std::string& cmd, Table& table, std::string& message, bool& error)
 {
     const bool debug = false;
 
     this->_parser.set_string(cmd);
-    MMap<string, string> parsed_tree = this->_parser.parse_tree();
+    MMap<std::string, std::string> parsed_tree = this->_parser.parse_tree();
     this->_ptree = parsed_tree;
     if (parsed_tree.empty())
     {
@@ -38,9 +38,9 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
         return;
     }
 
-    string table_name = parsed_tree["table_name"][0];
-    string command = parsed_tree["command"][0];
-    string file_name = table_name + ".bin";
+    std::string table_name = parsed_tree["table_name"][0];
+    std::string command = parsed_tree["command"][0];
+    std::string file_name = table_name + ".bin";
 
     if (command == "create" || command == "make")
     {
@@ -50,16 +50,16 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
             table = Table();
             message = "Table with name:" + table_name + " already exists";
             error = true;
-            if (debug) cout << message << endl;
+            if (debug) std::cout << message << std::endl;
             return;
         }
-        vector<string> fields = parsed_tree["fields"];
+        std::vector<std::string> fields = parsed_tree["fields"];
         table = Table(table_name, fields);
         message = "Created table with name:" + table_name + " success";
         if (debug)
         {
-            cout << message << endl;
-            cout << "fields:" << fields << endl;
+            std::cout << message << std::endl;
+            std::cout << "fields:" << fields << std::endl;
         }
         return;
     }
@@ -70,17 +70,17 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
             table = Table();
             message = "Table with name:" + table_name + " does not exist";
             error = true;
-            if (debug) cout << message << endl;
+            if (debug) std::cout << message << std::endl;
             return;
         }
-        vector<string> values = parsed_tree["values"];
+        std::vector<std::string> values = parsed_tree["values"];
         table = Table(table_name);
         table.insert_into(values);
         message = "Insert into table with name:" + table_name + " success";
         if (debug)
         {
-            cout << message << endl;
-            cout << "values::" << values << endl;
+            std::cout << message << std::endl;
+            std::cout << "values::" << values << std::endl;
         }
         return;
     }
@@ -91,12 +91,12 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
             table = Table();
             message = "Table with name:" + table_name + " does not exist";
             error = true;
-            if (debug) cout << message << endl;
+            if (debug) std::cout << message << std::endl;
             return;
         }
         bool where_exists = parsed_tree.contains("where");
         // update for select *
-        vector<string> selected_fields = parsed_tree["fields"];
+        std::vector<std::string> selected_fields = parsed_tree["fields"];
         Table root = Table(table_name);
         if (selected_fields[0] == "*") selected_fields = root.get_fields();
 
@@ -107,31 +107,31 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
             message = "Selection with table name:" + table_name + " success";
             if (debug)
             {
-                cout << message << endl;
-                cout << "selected fields:" << selected_fields << endl;
-                cout << root.select_all(selected_fields) << endl;
+                std::cout << message << std::endl;
+                std::cout << "selected fields:" << selected_fields << std::endl;
+                std::cout << root.select_all(selected_fields) << std::endl;
             }
             return;
         }
         if (where_exists)
         {
-            vector<string> condition = parsed_tree["condition"];
+            std::vector<std::string> condition = parsed_tree["condition"];
 
             table = root.select(selected_fields, condition);
             message = "Selection with table name:" + table_name + " success";
             if (debug)
             {
-                cout << message << endl;
-                cout << "selected fields:" << selected_fields << endl;
-                cout << "condition:" << condition << endl;
-                cout << root.select(selected_fields, condition) << endl;
+                std::cout << message << std::endl;
+                std::cout << "selected fields:" << selected_fields << std::endl;
+                std::cout << "condition:" << condition << std::endl;
+                std::cout << root.select(selected_fields, condition) << std::endl;
             }
             return;
         }
         table = Table();
         message = "Invalid command";
         error = true;
-        if (debug) cout << message << endl;
+        if (debug) std::cout << message << std::endl;
 
         return;
     }
@@ -139,18 +139,18 @@ void SQL::_process_cmd(const string& cmd, Table& table, string& message, bool& e
 
 void SQL::batch(const char* file, bool file_mode)
 {
-    ifstream f;
-    string temp = file;
-    string input_file_path = "../../batch/" + temp;
+    std::ifstream f;
+    std::string temp = file;
+    std::string input_file_path = "../../batch/" + temp;
 
     f.open(input_file_path.c_str());
 
     if (f.fail())
     {
-        cout << "No file named " << file << " exists." << endl;
+        std::cout << "No file named " << file << " exists." << std::endl;
         return;
     }
-    ofstream o;
+    std::ofstream o;
     if (file_mode)
     {
 #ifdef WIN32
@@ -158,53 +158,53 @@ void SQL::batch(const char* file, bool file_mode)
 #else
         mkdir("../../batch/output", 0755);
 #endif
-        string output_file = "../../batch/output/output.txt";
+        std::string output_file = "../../batch/output/output.txt";
         o.open(output_file.c_str());
         if (o.fail())
         {
-            cout << "cannot find output.txt" << endl;
+            std::cout << "cannot find output.txt" << std::endl;
             return;
         }
     }
-    if (!file_mode) cout << "------------------------------Batch Begins------------------------------" << endl;
-    if (file_mode) o << "------------------------------Batch Begins------------------------------" << endl;
+    if (!file_mode) std::cout << "------------------------------Batch Begins------------------------------" << std::endl;
+    if (file_mode) o << "------------------------------Batch Begins------------------------------" << std::endl;
     while (!f.eof())
     {
-        string str;
-        getline(f, str);
+        std::string str;
+        std::getline(f, str);
 
         if (str[0] == '/')
         {
-            if (!file_mode) cout << str << endl;
-            if (file_mode) o << str << endl;
+            if (!file_mode) std::cout << str << std::endl;
+            if (file_mode) o << str << std::endl;
             continue;
         }
         if (!str.empty())
         {
-            if (!file_mode) cout << "command:" << str << endl;
-            if (file_mode) o << "command:" << str << endl;
+            if (!file_mode) std::cout << "command:" << str << std::endl;
+            if (file_mode) o << "command:" << str << std::endl;
             Table tb = this->command(str);
             this->_table = tb;
 
             if (!file_mode)
             {
-                cout << tb << endl;
-                cout << "records selected: " << this->select_recnos() << endl;
-                cout << endl;
-                cout << endl;
+                std::cout << tb << std::endl;
+                std::cout << "records selected: " << this->select_recnos() << std::endl;
+                std::cout << std::endl;
+                std::cout << std::endl;
             }
             if (file_mode)
             {
-                o << tb << endl;
-                o << "records selected: " << this->select_recnos() << endl;
-                o << endl;
-                o << endl;
+                o << tb << std::endl;
+                o << "records selected: " << this->select_recnos() << std::endl;
+                o << std::endl;
+                o << std::endl;
             }
         }
     }
 
     f.close();
-    if (!file_mode) cout << "------------------------------DONE------------------------------" << endl;
-    if (file_mode) o << "------------------------------DONE------------------------------" << endl;
+    if (!file_mode) std::cout << "------------------------------DONE------------------------------" << std::endl;
+    if (file_mode) o << "------------------------------DONE------------------------------" << std::endl;
     if (file_mode) o.close();
 }

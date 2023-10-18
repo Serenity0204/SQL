@@ -6,8 +6,6 @@
 
 #include "../linked_list_functions/linked_list_functions.h"
 
-using namespace std;
-
 template <typename T>
 class Stack
 {
@@ -109,7 +107,7 @@ public:
     T top();
 
     template <typename U>
-    friend ostream& operator<<(ostream& outs, const Stack<U>& printMe);
+    friend std::ostream& operator<<(std::ostream& outs, const Stack<U>& printMe);
     void clear()
     {
         _clear_list<T>(this->_top);
@@ -203,7 +201,7 @@ T Stack<T>::top()
 }
 
 template <typename U>
-ostream& operator<<(ostream& outs, const Stack<U>& printMe)
+std::ostream& operator<<(std::ostream& outs, const Stack<U>& printMe)
 {
     typename Stack<U>::Iterator it;
     if (printMe.empty())
@@ -215,7 +213,7 @@ ostream& operator<<(ostream& outs, const Stack<U>& printMe)
     {
         if (it) outs << "[" << *it << "]->";
     }
-    outs << "|||" << endl;
+    outs << "|||" << std::endl;
     return outs;
 }
 

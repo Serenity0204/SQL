@@ -6,12 +6,10 @@
 #include <unordered_map>
 #include <vector>
 
-using namespace std;
-
 struct TrieNode
 {
 public:
-    unordered_map<char, shared_ptr<TrieNode>> _children;
+    std::unordered_map<char, std::shared_ptr<TrieNode>> _children;
     bool _is_word;
     TrieNode()
         : _is_word(false)
@@ -25,24 +23,24 @@ class Trie
 public:
     Trie()
     {
-        this->_root = make_shared<TrieNode>();
+        this->_root = std::make_shared<TrieNode>();
     }
 
-    void insert(string word)
+    void insert(std::string word)
     {
-        shared_ptr<TrieNode> walker = this->_root;
+        std::shared_ptr<TrieNode> walker = this->_root;
         for (char c : word)
         {
-            if (!walker->_children.count(c)) walker->_children[c] = make_shared<TrieNode>();
+            if (!walker->_children.count(c)) walker->_children[c] = std::make_shared<TrieNode>();
             walker = walker->_children[c];
         }
         walker->_is_word = true;
     }
 
-    vector<string> get_prefix(string prefix)
+    std::vector<std::string> get_prefix(std::string prefix)
     {
-        vector<string> res;
-        shared_ptr<TrieNode> walker = _root;
+        std::vector<std::string> res;
+        std::shared_ptr<TrieNode> walker = _root;
         for (char c : prefix)
         {
             if (!walker->_children.count(c)) return res;
@@ -53,9 +51,9 @@ public:
     }
 
 private:
-    shared_ptr<TrieNode> _root;
+    std::shared_ptr<TrieNode> _root;
 
-    void _dfs(shared_ptr<TrieNode> node, string cur_word, vector<string>& res)
+    void _dfs(std::shared_ptr<TrieNode> node, std::string cur_word, std::vector<std::string>& res)
     {
         if (node->_is_word) res.push_back(cur_word);
         for (auto& pair : node->_children) this->_dfs(pair.second, cur_word + pair.first, res);

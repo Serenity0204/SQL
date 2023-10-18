@@ -4,7 +4,6 @@
 #include <cstdlib> // Provides std::size_t
 #include <iostream>
 #include <vector> // Provides std::vector
-using namespace std;
 
 template <typename K, typename V>
 struct MPair
@@ -21,7 +20,7 @@ struct MPair
      */
     //--------------------------------------------------------------------------------
     MPair(const K& k = K())
-        : key(k), value_list(vector<V>())
+        : key(k), value_list(std::vector<V>())
     {
     }
     MPair(const K& k, const V& v)
@@ -40,7 +39,7 @@ struct MPair
     {
         outs << print_me.key << ":";
         for (int i = 0; i < print_me.value_list.size(); ++i) outs << print_me.value_list[i] << " ";
-        outs << endl;
+        outs << std::endl;
         return outs;
     }
     friend bool operator==(const MPair<K, V>& lhs, const MPair<K, V>& rhs)
@@ -85,12 +84,12 @@ std::ostream& operator<<(std::ostream& outs, const std::vector<Item>& vec)
 {
     if (vec.size() == 0)
     {
-        outs << "Empty" << endl;
+        outs << "Empty" << std::endl;
         return outs;
     }
     for (int i = 0; i < vec.size() - 1; ++i) outs << vec[i] << ", ";
     outs << vec[vec.size() - 1];
-    outs << endl;
+    outs << std::endl;
     return outs;
 }
 
