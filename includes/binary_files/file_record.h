@@ -66,20 +66,7 @@ public:
         return total;
     }
     // Returns the record
-    std::vector<char*> get_records()
-    {
-        std::vector<char*> res;
-        for (int i = 0; i < this->_records.size(); ++i)
-        {
-            std::string record = this->_records[i];
-            char* temp = new char[record.size() + 1];
-            strncpy(temp, record.c_str(), record.size());
-            temp[record.size()] = '\0';
-            res.push_back(temp);
-        }
-        return res;
-    }
-    std::vector<std::string> get_records_string()
+    std::vector<std::string> get_records()
     {
         return this->_records;
     }

@@ -67,10 +67,10 @@ Table& Table::operator=(const Table& RHS)
 }
 
 // insert
-std::string Table::insert_into(const std::vector<std::string>& field_values)
+void Table::insert_into(const std::vector<std::string>& field_values)
 {
     // invalid number of field_values
-    if (field_values.size() != this->_field_names.size()) return "Invalid number of arguments";
+    if (field_values.size() != this->_field_names.size()) return;
 
     // insert data into binary file
     std::fstream f;
@@ -97,7 +97,6 @@ std::string Table::insert_into(const std::vector<std::string>& field_values)
     // for number of record
     this->_n_records = this->_record_indices.size();
     this->_total_records++;
-    return "insert success";
 }
 
 // print
@@ -159,12 +158,12 @@ void Table::_init(bool is_new)
         r.resize(1);
         // get the entry size first
         r.read(f, 0);
-        int size = stoi(r.get_records_string()[0]);
+        int size = stoi(r.get_records()[0]);
         r.resize(size + 1);
 
         // read the field names
         r.read(f, 0);
-        std::vector<std::string> field_names = r.get_records_string();
+        std::vector<std::string> field_names = r.get_records();
         std::vector<std::string>::iterator it = field_names.begin();
         // exclude the size mark
         field_names.erase(it);
@@ -199,7 +198,7 @@ void Table::_index()
         long bytes = r.read(f, i);
         if (bytes == 0) break;
         // put the ith_entry into cache
-        std::vector<std::string> ith_entry = r.get_records_string();
+        std::vector<std::string> ith_entry = r.get_records();
         for (int ith_entry_walker = 0; ith_entry_walker < ith_entry.size(); ++ith_entry_walker)
         {
             // this->_field_names[ith_entry_walker] -> stuff like "name"
@@ -268,7 +267,7 @@ void Table::_read_helper(Table& temp)
         long byte = r.read(f, idx);
 
         if (byte == 0) break;
-        std::vector<std::string> entry = r.get_records_string();
+        std::vector<std::string> entry = r.get_records();
         for (int i = 0; i < entry.size(); ++i)
             if (Helper::is_in(temp._field_names, this->_field_names[i])) temp._to_print += entry[i];
     }

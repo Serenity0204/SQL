@@ -129,8 +129,7 @@ public:
     std::string create_table(const std::string& table_name, const std::vector<std::string>& field_names);
 
     // SQL: INSERT INTO
-    // string insert_into(const vector<char*>& field_values); ??
-    std::string insert_into(const std::vector<std::string>& field_values);
+    void insert_into(const std::vector<std::string>& field_values);
 
     // SQL: SELECT
     Table select(const std::vector<std::string>& selected_fields, const std::string& field_name, const std::string& op, const std::string& field_value);
