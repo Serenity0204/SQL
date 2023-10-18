@@ -1,6 +1,6 @@
 # SQL
 
-A relational database system built using C++, complete with a custom SQL-like language, from the ground up. This project involved creating essential data structures, with the exception of utilizing pre-existing std library. The system offers dual modes of interaction: a user-friendly command-line mode and a batch mode capable of reading from files and delivering outputs to either the terminal or files. The implemented SQL-like statements encompass crucial functionalities such as select, insert, and create operations.
+A relational database system built using C++, complete with a custom SQL-like language, from the ground up. This project involved creating essential data structures, with the exception of utilizing the pre-existing STL library. The system offers dual modes of interaction: a user-friendly command-line mode and a batch mode capable of reading from files and delivering outputs to either the terminal or files. The implemented SQL-like statements encompass crucial functionalities such as select, insert, and create operations.
 
 - create table <TABLE_NAME> fields <FIELD_NAME> [, <FIELD_NAME> ...]
 - make table <TABLE_NAME> fields <FIELD_NAME> [, <FIELD_NAME> ...]
