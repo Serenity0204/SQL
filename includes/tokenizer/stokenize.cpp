@@ -33,28 +33,28 @@ bool STokenizer::more() // true: there are more tokens
 void STokenizer::make_table(int table[][MAX_COLUMNS])
 {
     // init
-    init_table(this->_table);
+    state_machine::init_table(this->_table);
     // decide success and fail state
-    mark_fail(this->_table, 0);
-    for (int i = 1; i <= 8; ++i) mark_success(_table, i);
+    state_machine::mark_fail(this->_table, 0);
+    for (int i = 1; i <= 8; ++i) state_machine::mark_success(_table, i);
 
     // hard coded state machine
     // init different input for state 0
-    mark_cells(0, _table, ALPHAS, 1);
-    mark_cells(0, _table, DIGITS, 2);
-    mark_cells(0, _table, OPERATORS, 3);
-    mark_cells(0, _table, COMMA, 4);
-    mark_cells(0, _table, SPACES, 5);
-    mark_cells(0, _table, PAREN, 6);
-    mark_cells(0, _table, STAR, 7);
-    mark_cell(0, _table, '\"', 8);
+    state_machine::mark_cells(0, _table, ALPHAS, 1);
+    state_machine::mark_cells(0, _table, DIGITS, 2);
+    state_machine::mark_cells(0, _table, OPERATORS, 3);
+    state_machine::mark_cells(0, _table, COMMA, 4);
+    state_machine::mark_cells(0, _table, SPACES, 5);
+    state_machine::mark_cells(0, _table, PAREN, 6);
+    state_machine::mark_cells(0, _table, STAR, 7);
+    state_machine::mark_cell(0, _table, '\"', 8);
 
     // remains the same state
-    mark_cells(1, _table, ALPHAS, 1);    // state 1 alpha encounters alpha-> remains in state 1
-    mark_cells(2, _table, DIGITS, 2);    // state 2 digit encounters digit-> remains in state 2
-    mark_cells(3, _table, OPERATORS, 3); // state 3 operator encounters operator-> remains in state 3
-    for (int i = 0; i <= 255; ++i)       // for "
-        if (i != '\"') mark_cell(8, _table, i, 8);
+    state_machine::mark_cells(1, _table, ALPHAS, 1);    // state 1 alpha encounters alpha-> remains in state 1
+    state_machine::mark_cells(2, _table, DIGITS, 2);    // state 2 digit encounters digit-> remains in state 2
+    state_machine::mark_cells(3, _table, OPERATORS, 3); // state 3 operator encounters operator-> remains in state 3
+    for (int i = 0; i <= 255; ++i)                      // for "
+        if (i != '\"') state_machine::mark_cell(8, _table, i, 8);
 }
 // return the type of the token
 STRING_TOKEN_TYPES STokenizer::token_type(int state) const
