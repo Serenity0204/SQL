@@ -23,7 +23,7 @@ public:
             this->_ptr = nullptr;
         }
         // Point Iterator to where p is pointing to
-        Iterator(node<T>* p)
+        Iterator(Node<T>* p)
         {
             this->_ptr = p;
         }
@@ -78,7 +78,7 @@ public:
         }
 
     private:
-        node<T>* _ptr; // pointer being encapsulated
+        Node<T>* _ptr; // pointer being encapsulated
     };
 
     // constructor: CTOR
@@ -116,7 +116,7 @@ public:
     }
 
 private:
-    node<T>* _top;
+    Node<T>* _top;
     int _size;
 };
 
