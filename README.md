@@ -50,8 +50,7 @@ select * from student101 where age = 18 and name LIKE Dan
 ```
 ## Design
 
-change the repo name:
-Can be found in https://github.com/Serenity0204/SQL/blob/master/design.txt
+https://github.com/Serenity0204/SQL/blob/master/design.txt
 
 ## Features
 
